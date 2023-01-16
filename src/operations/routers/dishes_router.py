@@ -1,21 +1,22 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from src.operations.schemes import dish_schemes as d
 from src.operations.crud import create, read, update, delete
+from src.database import get_db
 
 
-dish_router = APIRouter(prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', tags=['dishes'])
+dish_router = APIRouter(prefix='/menus/{menu_id}/submenus/{submenu_id}/dishes', tags=['dishes'])
 
 
 @dish_router.post('/', response_model=d.Dish, status_code=201)
-def create_dish(menu_id: int, submenu_id: int, dish: d.DishCreate, db: Session):
+def create_dish(menu_id: int, submenu_id: int, dish: d.DishCreate, db: Session = Depends(get_db)):
     """Creating a new dish"""
 
     return create.create_dish(db=db, dish=dish, menu_id=menu_id, submenu_id=submenu_id)
 
 
 @dish_router.get('/', response_model=list[d.Dish])
-def get_all_dishes(menu_id: int, submenu_id: int, db: Session):
+def get_all_dishes(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
     """Get a list of menus"""
 
     dishes_l = read.get_dishes(db=db, submenu_id=submenu_id)
@@ -23,7 +24,7 @@ def get_all_dishes(menu_id: int, submenu_id: int, db: Session):
 
 
 @dish_router.get('/{dish_id}', response_model=d.Dish)
-def get_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session):
+def get_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db)):
     """Get certain dish by id"""
 
     dish = read.get_dish_by_id(db=db, dish_id=dish_id)
@@ -32,7 +33,7 @@ def get_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session):
 
 
 @dish_router.patch('/{dish_id}', response_model=d.Dish)
-def update_dish(menu_id: int, submenu_id: int, dish_id: int, dish: d.DishUpdate, db: Session):
+def update_dish(menu_id: int, submenu_id: int, dish_id: int, dish: d.DishUpdate, db: Session = Depends(get_db)):
     """Updating certain dish by id"""
 
     upd_dish = read.get_dish_by_id(db=db, dish_id=dish_id)
@@ -44,7 +45,7 @@ def update_dish(menu_id: int, submenu_id: int, dish_id: int, dish: d.DishUpdate,
 
 
 @dish_router.delete('/{dish_id}')
-def delete_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session):
+def delete_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db)):
     """Deleting certain dish by id"""
 
     del_dish = delete.delete_dish(db=db, dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id)

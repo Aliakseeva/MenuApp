@@ -12,10 +12,8 @@ class Submenu(BaseModel):
 
 
 class SubmenuCreate(BaseModel):
-    id: str
     title: str
     description: str
-    dishes_count: int = 0
 
 
 class SubmenuUpdate(BaseModel):

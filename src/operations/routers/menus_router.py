@@ -5,13 +5,14 @@ from ..crud import create
 from ..crud import read
 from ..crud import update
 from ..crud import delete
+from src.database import get_db
 
 
-menu_router = APIRouter(prefix='/api/v1/menus', tags=['menus'])
+menu_router = APIRouter(prefix='/menus', tags=['menus'])
 
 
 @menu_router.post('/', response_model=m.Menu, status_code=201)
-def create_menu(menu: m.MenuCreate, db: Session):
+def create_menu(menu: m.MenuCreate, db: Session = Depends(get_db)):
     """Creating a new menu"""
 
     new_menu = create.create_menu(db=db, menu=menu)
@@ -19,7 +20,7 @@ def create_menu(menu: m.MenuCreate, db: Session):
 
 
 @menu_router.get('/', response_model=list[m.Menu])
-def get_all_menus(db: Session):
+def get_all_menus(db: Session = Depends(get_db)):
     """Get a list of menus"""
 
     menus_l = read.get_menus(db=db)
@@ -27,7 +28,7 @@ def get_all_menus(db: Session):
 
 
 @menu_router.get('/{menu_id}', response_model=m.Menu)
-def get_menu(menu_id: int, db: Session):
+def get_menu(menu_id: int, db: Session = Depends(get_db)):
     """Get certain menu by id"""
 
     menu = read.get_menu_by_id(db=db, menu_id=menu_id)
@@ -36,7 +37,7 @@ def get_menu(menu_id: int, db: Session):
 
 
 @menu_router.patch('/{menu_id}', response_model=m.Menu)
-def update_menu(menu_id: int, menu: m.MenuUpdate, db: Session):
+def update_menu(menu_id: int, menu: m.MenuUpdate, db: Session = Depends(get_db)):
     """Updating certain menu by id"""
 
     upd_menu = read.get_menu_by_id(db=db, menu_id=menu_id)
@@ -47,7 +48,7 @@ def update_menu(menu_id: int, menu: m.MenuUpdate, db: Session):
 
 
 @menu_router.delete('/{menu_id}')
-def delete_menu(menu_id: int, db: Session):
+def delete_menu(menu_id: int, db: Session = Depends(get_db)):
     """Deleting certain menu by id"""
 
     del_menu = delete.delete_menu(db=db, menu_id=menu_id)

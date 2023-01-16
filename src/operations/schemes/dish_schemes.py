@@ -13,14 +13,12 @@ class Dish(BaseModel):
 
 
 class DishCreate(BaseModel):
-    submenu_id: str
     title: str
     description: str
     price: str
 
 
 class DishUpdate(BaseModel):
-    submenu_id: str
     title: str
     description: str
     price: str

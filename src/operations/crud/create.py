@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from .read import get_menu_by_id, get_submenu_by_id
 
-from operations.schemes import menu_schemes as m
-from operations.schemes import submenu_schemes as sm
-from operations.schemes import dish_schemes as d
-from models import Menu, Submenu, Dish
+from src.operations.schemes import menu_schemes as m
+from src.operations.schemes import submenu_schemes as sm
+from src.operations.schemes import dish_schemes as d
+from src.models import Menu, Submenu, Dish
 
 
 def create_menu(db: Session, menu: m.MenuCreate):
