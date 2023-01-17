@@ -16,9 +16,9 @@ def startup():
     """Database cleaning after startup"""
 
     db = local_session()
-    db.query(Menu).delete()
-    db.query(Submenu).delete()
     db.query(Dish).delete()
+    db.query(Submenu).delete()
+    db.query(Menu).delete()
     db.commit()
     db.close()
 
@@ -52,7 +52,7 @@ def get_menu(menu_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail='menu not found')
 
 
-@app.post('/api/v1/menus', response_model=m.Menu)
+@app.post('/api/v1/menus', response_model=m.Menu, status_code=201)
 def create_menu(menu: m.MenuCreateUpdate, db: Session = Depends(get_db)):
     """Creates a new menu"""
 
@@ -84,7 +84,7 @@ def delete_menu(menu_id: int, db: Session = Depends(get_db)):
 #####################################################################
 
 
-@app.post('/api/v1/menus/{menu_id}/submenus', response_model=sm.Submenu)
+@app.post('/api/v1/menus/{menu_id}/submenus', response_model=sm.Submenu, status_code=201)
 def create_submenu(menu_id: int, submenu: sm.SubmenuCreateUpdate, db: Session = Depends(get_db)):
     """Creates a new submenu"""
 
@@ -124,7 +124,7 @@ def update_submenu(submenu_id: int, submenu: sm.SubmenuCreateUpdate, db: Session
         return update.update_submenu(db=db, submenu_id=submenu_id)
 
 
-@app.delete('/api/v1/menus/{menu_id}/submenus/{submenu_id}', response_model=sm.Submenu)
+@app.delete('/api/v1/menus/{menu_id}/submenus/{submenu_id}', response_model=None)
 def delete_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
     """Deletes the submenu """
 
@@ -135,7 +135,7 @@ def delete_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db))
 
 ########################################
 
-@app.post('/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', response_model=d.Dish)
+@app.post('/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', response_model=d.Dish, status_code=201)
 def create_dish(menu_id: int, submenu_id: int, dish: d.DishCreateUpdate, db: Session = Depends(get_db)):
     """Creating a new dish"""
 
@@ -163,9 +163,10 @@ def get_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(
 
 @app.patch('/api/v1/menus/{menu_id}/submenus/{submenu_id}', response_model=d.Dish)
 def update_dish(menu_id: int, submenu_id: int, dish_id: int, dish: d.DishCreateUpdate, db: Session = Depends(get_db)):
-    """Updating certain dish by id"""
+    """Updating the dish by id"""
 
     upd_dish = read.get_dish_by_id(db=db, dish_id=dish_id)
+
     if not upd_dish:
         raise HTTPException(status_code=404, detail='dish not found')
     else:
@@ -175,7 +176,7 @@ def update_dish(menu_id: int, submenu_id: int, dish_id: int, dish: d.DishCreateU
         return update.update_dish(db=db, dish_id=dish_id)
 
 
-@app.delete('/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}', response_model=d.Dish)
+@app.delete('/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}', response_model=None)
 def delete_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db)):
     """Deletes the dish by id"""
 
@@ -190,4 +191,3 @@ def delete_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depen
 # dish price to float
 # edit pep
 # добавить httpexeptions
-

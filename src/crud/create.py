@@ -23,7 +23,7 @@ def create_submenu(db: Session, submenu: sm.SubmenuCreateUpdate, menu_id: int):
     return db_submenu
 
 
-def create_dish(db: Session, dish: d.Dish, menu_id: int, submenu_id: int):
+def create_dish(db: Session, dish: d.DishCreateUpdate, menu_id: int, submenu_id: int):
     db_dish = Dish(**dish.dict())
     db_dish.submenu_id = submenu_id
     get_menu_by_id(db=db, menu_id=menu_id).dishes_count += 1

@@ -14,3 +14,4 @@ class Dish(BaseModel):
 class DishCreateUpdate(BaseModel):
     title: str
     description: str
+    price: str
