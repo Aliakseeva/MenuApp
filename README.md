@@ -28,19 +28,19 @@ DB_USER=postgres
 DB_PASS=postgres
 ```
 
-# 3. Install requirements
-
-```bash
-pip install -r requirements.txt
-```
-
-# 4. Create virtual environment and activate it
+# 3. Create virtual environment and activate it
 
 ```bash
 python3 -m venv venv
 ```
 ```bash
 source venv/Scripts/activate
+``` 
+
+# 4. Install requirements
+
+```bash
+pip install -r requirements.txt
 ```
 
 # 5. Apply migrations
