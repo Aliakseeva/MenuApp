@@ -40,7 +40,7 @@ pip install -r requirements.txt
 python3 -m venv venv
 ```
 ```bash
-source venv/bin/activate
+source venv/Scripts/activate
 ```
 
 # 5. Apply migrations
