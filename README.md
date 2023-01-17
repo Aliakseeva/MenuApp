@@ -55,4 +55,6 @@ alembic upgrade head
 python3 main.py
 ```
 
+Note! The database is cleared automatically with every run.
+
 # 7. You are awesome! Enjoy! 😼
