@@ -4,12 +4,12 @@ Restaraunt menu REST API
 
 # Based on:
 ```
-Python3
-FastAPI Web framework
-PostgreSQL
-SQLAlchemy ORM
-Alembic database migration tool
-Uvicorn ASGI web server
+🐍 Python3
+⚡ FastAPI Web framework
+🐘 PostgreSQL
+📜 SQLAlchemy ORM
+📝 Alembic database migration tool
+🦄 Uvicorn ASGI web server
 ```
 
 # 1. Clone repository
@@ -55,4 +55,4 @@ alembic upgrade head
 python3 main.py
 ```
 
-# 7. You are awesome! Enjoy!
+# 7. You are awesome! Enjoy! 😼
