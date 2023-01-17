@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+﻿from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
 from .database import local_session, get_db
@@ -38,7 +38,7 @@ def get_menu(menu_id: int, db: Session = Depends(get_db)):
     """Gets certain menu by id"""
 
     menu = read.get_menu_by_id(db=db, menu_id=menu_id)
-    return menu if menu else {'detail': 'menu not found'}
+    return menu
 
 
 @app.post('/api/v1/menus')
@@ -173,4 +173,5 @@ def delete_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depen
 # при выводе блюда убрать из полей submenu id
 # dish price to float
 # edit pep
+# добавить httpexeptions
 
