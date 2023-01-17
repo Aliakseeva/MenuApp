@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from src.operations.schemes import dish_schemes as d
-from src.operations.crud import create, read, update, delete
+from src.schemes import dish_schemes as d
+from src.crud import delete, read, create, update
 from src.database import get_db
 
 

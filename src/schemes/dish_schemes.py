@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 class Dish(BaseModel):
     id: str
-    submenu_id: str
     title: str
     description: str
     price: str
@@ -12,13 +11,6 @@ class Dish(BaseModel):
         orm_mode = True
 
 
-class DishCreate(BaseModel):
+class DishCreateUpdate(BaseModel):
     title: str
     description: str
-    price: str
-
-
-class DishUpdate(BaseModel):
-    title: str
-    description: str
-    price: str

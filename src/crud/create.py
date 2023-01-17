@@ -1,13 +1,11 @@
 from sqlalchemy.orm import Session
 from .read import get_menu_by_id, get_submenu_by_id
 
-from src.operations.schemes import menu_schemes as m
-from src.operations.schemes import submenu_schemes as sm
-from src.operations.schemes import dish_schemes as d
+from ..schemes import menu_schemes as m, submenu_schemes as sm, dish_schemes as d
 from src.models import Menu, Submenu, Dish
 
 
-def create_menu(db: Session, menu: m.MenuCreate):
+def create_menu(db: Session, menu: m.MenuCreateUpdate):
     db_menu = Menu(**menu.dict())
     db.add(db_menu)
     db.commit()
@@ -15,7 +13,7 @@ def create_menu(db: Session, menu: m.MenuCreate):
     return db_menu
 
 
-def create_submenu(db: Session, submenu: sm.SubmenuCreate, menu_id: int):
+def create_submenu(db: Session, submenu: sm.SubmenuCreateUpdate, menu_id: int):
     db_submenu = Submenu(**submenu.dict())
     db_submenu.menu_id = menu_id
     get_menu_by_id(db=db, menu_id=menu_id).submenus_count += 1
@@ -25,7 +23,7 @@ def create_submenu(db: Session, submenu: sm.SubmenuCreate, menu_id: int):
     return db_submenu
 
 
-def create_dish(db: Session, dish: d.DishCreate, menu_id: int, submenu_id: int):
+def create_dish(db: Session, dish: d.Dish, menu_id: int, submenu_id: int):
     db_dish = Dish(**dish.dict())
     db_dish.submenu_id = submenu_id
     get_menu_by_id(db=db, menu_id=menu_id).dishes_count += 1

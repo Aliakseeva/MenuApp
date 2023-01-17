@@ -1,10 +1,7 @@
 from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
-from ..schemes import submenu_schemes as sm
-from src.operations.crud import create
-from src.operations.crud import read
-from src.operations.crud import update
-from src.operations.crud import delete
+from src.schemes import submenu_schemes as sm
+from src.crud import delete, read, create, update
 from src.database import get_db
 
 
