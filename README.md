@@ -52,7 +52,7 @@ alembic upgrade head
 # 6. Run the project
 
 ```bash
-python3 main.py
+uvicorn src.main:app --reload
 ```
 
 Note! The database is cleared automatically with every run.
