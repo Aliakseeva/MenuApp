@@ -23,16 +23,6 @@ def startup():
     db.close()
 
 
-# @app.on_event('shutdown')
-# def shutdown():
-#     db = local_session()
-#     db.query(Menu).delete()
-#     db.query(Submenu).delete()
-#     db.query(Dish).delete()
-#     db.commit()
-#     db.close()
-
-
 @app.get('/api/v1/menus', response_model=List[m.Menu])
 def get_all_menus(db: Session = Depends(get_db)):
     """Gets a list of menu"""
@@ -161,7 +151,7 @@ def get_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(
         raise HTTPException(status_code=404, detail='dish not found')
 
 
-@app.patch('/api/v1/menus/{menu_id}/submenus/{submenu_id}', response_model=d.Dish)
+@app.patch('/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}', response_model=d.Dish)
 def update_dish(menu_id: int, submenu_id: int, dish_id: int, dish: d.DishCreateUpdate, db: Session = Depends(get_db)):
     """Updating the dish by id"""
 
@@ -184,10 +174,3 @@ def delete_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depen
     if del_dish:
         return {'status': True, 'message': 'The dish has been deleted'}
 
-
-
-# TODO
-# при выводе блюда убрать из полей submenu id
-# dish price to float
-# edit pep
-# добавить httpexeptions
