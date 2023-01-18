@@ -31,7 +31,7 @@ DB_PASS=postgres
 # 3. Create virtual environment and activate it
 
 ```bash
-python3 -m venv venv
+python -m venv venv
 ```
 ```bash
 source venv/Scripts/activate
