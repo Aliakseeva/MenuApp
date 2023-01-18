@@ -30,6 +30,8 @@ DB_PASS=postgres
 
 # 3. Create virtual environment and activate it
 
+Make sure you are located in /MenuApp repository!
+
 ```bash
 python -m venv venv
 ```
@@ -55,6 +57,6 @@ alembic upgrade head
 uvicorn src.main:app --reload
 ```
 
-Note! The database is cleared automatically with every run.
+Note! The database is cleared automatically with every app run.
 
 # 7. You are awesome! Enjoy! 😼
