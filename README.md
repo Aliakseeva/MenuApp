@@ -1,5 +1,5 @@
 # MenuApp
-Restaraunt menu REST API
+Restaurant menu REST API
 <!--  DELETE THE LINES ABOVE THIS AND WRITE YOUR PROJECT README BELOW -->
 
 # Based on:
