@@ -1,6 +1,6 @@
 # MenuApp
 Restaurant menu REST API
-<!--  DELETE THE LINES ABOVE THIS AND WRITE YOUR PROJECT README BELOW -->
+
 
 # Based on:
 ```
@@ -10,15 +10,43 @@ Restaurant menu REST API
 📜 SQLAlchemy ORM
 📝 Alembic database migration tool
 🦄 Uvicorn ASGI web server
+🐳 Docker containers
 ```
 
-# 1. Clone repository
+# DOCKER RUN
+
+
+##### 1. Clone repository
 
 ```bash
 git clone https://github.com/Aliakseeva/MenuApp
 ```
 
-# 2. Set up .evn file, for example:
+##### 2. Run docker-compose
+
+```bash
+docker-compose -f docker-compose.yml up -d
+```
+
+##### 3. Done!
+
+
+> To see tests result, run:
+
+```bash
+docker logs app_tests
+```
+
+# MANUAL RUN
+
+
+##### 1. Clone repository
+
+```bash
+git clone https://github.com/Aliakseeva/MenuApp
+```
+
+##### 2. Set up .evn file, for example:
 
 ```text
 DB_HOST=localhost
@@ -28,7 +56,7 @@ DB_USER=postgres
 DB_PASS=postgres
 ```
 
-# 3. Create virtual environment and activate it
+##### 3. Create virtual environment and activate it
 
 Make sure you are located in /MenuApp repository!
 
@@ -39,19 +67,19 @@ python -m venv venv
 source venv/Scripts/activate
 ``` 
 
-# 4. Install requirements
+##### 4. Install requirements
 
 ```bash
 pip install -r requirements.txt
 ```
 
-# 5. Apply migrations
+##### 5. Apply migrations
 
 ```bash
 alembic upgrade head
 ```
 
-# 6. Run the project
+##### 6. Run the project
 
 ```bash
 uvicorn src.main:app --reload
@@ -59,4 +87,4 @@ uvicorn src.main:app --reload
 
 Note! The database is cleared automatically with every app run.
 
-# 7. You are awesome! Enjoy! 😼
+##### 7. You are awesome! Enjoy! 😼
