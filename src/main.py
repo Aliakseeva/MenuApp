@@ -26,4 +26,4 @@ def startup():
 @app.get('/', response_model=None)
 def say_hello():
     """Hello-page"""
-    return {'Hi': 'there'}
+    return {'Hello': 'there'}
