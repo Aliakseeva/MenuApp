@@ -3,8 +3,13 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from MenuApp.src.config import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT
-from MenuApp.src.models import metadata
+
+import sys
+sys.path = ["", ".."] + sys.path[1:]
+
+from src.config import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT
+from src.models import metadata
+
 
 
 # this is the Alembic Config object, which provides
