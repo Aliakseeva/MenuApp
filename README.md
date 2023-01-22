@@ -28,10 +28,7 @@ git clone https://github.com/Aliakseeva/MenuApp
 docker-compose -f docker-compose.yml up -d
 ```
 
-##### 3. Done!
-
-
-> To see tests result, run:
+##### 3. Done! To see tests result, run:
 
 ```bash
 docker logs app_tests
