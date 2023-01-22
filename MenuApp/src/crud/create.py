@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from .read import get_menu_by_id, get_submenu_by_id
 
 from ..schemas import menu_schemas as m, submenu_schemas as sm, dish_schemas as d
-from src.models import Menu, Submenu, Dish
+from ..models import Menu, Submenu, Dish
 
 
 def create_menu(db: Session, menu: m.MenuCreateUpdate):

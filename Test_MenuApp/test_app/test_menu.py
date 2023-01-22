@@ -1,6 +1,6 @@
 import pytest
 
-from src.main import app as apps
+from MenuApp.src.main import app as apps
 from fastapi.testclient import TestClient
 
 
