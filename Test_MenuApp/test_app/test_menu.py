@@ -1,10 +1,10 @@
 import pytest
 
-from MenuApp.src.main import app as apps
+from MenuApp.src.main import app
 from fastapi.testclient import TestClient
 
 
-client = TestClient(apps)
+client = TestClient(app)
 
 URL = '/api/v1/menus'
 DATA = {'title': 'Title', 'description': 'Description'}
@@ -16,7 +16,6 @@ class TestMenu:
         self.response_menu_post = client.post(URL, json=DATA)
         self.menu_id = self.response_menu_post.json()['id']
 
-    @pytest.mark.create
     def test_menu_create(self):
         response = self.response_menu_post
 
@@ -25,7 +24,6 @@ class TestMenu:
         assert response.json()['description'] == DATA['description']
         assert isinstance(response.json()['id'], str)
 
-    @pytest.mark.read
     def test_menu_read(self):
         response = client.get(f'{URL}/{self.menu_id}')
 
