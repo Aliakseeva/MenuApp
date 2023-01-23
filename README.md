@@ -24,6 +24,8 @@ git clone https://github.com/Aliakseeva/MenuApp
 
 ##### 2. Run docker-compose
 
+Make sure you are located in /MenuApp repository!
+
 ```bash
 docker-compose -f docker-compose.yml up -d
 ```
