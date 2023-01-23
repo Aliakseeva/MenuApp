@@ -57,4 +57,4 @@ def delete_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db))
 
     del_submenu = delete.delete_submenu(db=db, menu_id=menu_id, submenu_id=submenu_id)
     if del_submenu:
-        return {'status': True, 'message': 'The menu has been deleted'}
+        return {'status': True, 'message': 'The submenu has been deleted'}

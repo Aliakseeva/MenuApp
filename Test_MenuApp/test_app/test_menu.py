@@ -1,5 +1,3 @@
-import pytest
-
 from MenuApp.src.main import app
 from fastapi.testclient import TestClient
 
@@ -7,8 +5,8 @@ from fastapi.testclient import TestClient
 client = TestClient(app)
 
 URL = '/api/v1/menus'
-DATA = {'title': 'Title', 'description': 'Description'}
-UPDATED_DATA = {'title': 'Upd title', 'description': 'Upd description'}
+DATA = {'title': 'Menu title', 'description': 'Menu description'}
+UPDATED_DATA = {'title': 'Upd menu title', 'description': 'Upd menu description'}
 
 
 class TestMenu:
@@ -46,7 +44,7 @@ class TestMenu:
         assert isinstance(response.json(), list)
         assert response.json()[0]['title'] == DATA['title']
         assert response.json()[0]['description'] == DATA['description']
-        assert type(response.json()[0]['id']) == str
+        assert isinstance(response.json()[0]['id'], str)
 
     def test_menu_patch(self):
         response = client.patch(f'{URL}/{self.menu_id}', json=UPDATED_DATA)
