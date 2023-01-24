@@ -16,30 +16,30 @@ Restaurant menu REST API
 # DOCKER RUN
 
 
-##### 1. Clone repository
+##### 1. Clone repository:
 
 ```bash
 git clone https://github.com/Aliakseeva/MenuApp
 ```
 
-##### 2. Run docker-compose
+##### 2. Run docker-compose:
 
 Make sure you are located in project repository!
 
 ```bash
-docker-compose -f docker-compose.yml up -d
+docker-compose up
 ```
 
-##### 3. Done! To see tests result, run:
+##### 3. Done! Wanna test it? Run:
 
 ```bash
-docker logs app_tests
+docker-compose -f docker-compose-tests.yml up
 ```
 
 # MANUAL RUN
 
 
-##### 1. Clone repository
+##### 1. Clone repository:
 
 ```bash
 git clone https://github.com/Aliakseeva/MenuApp
@@ -55,7 +55,7 @@ DB_USER=postgres
 DB_PASS=postgres
 ```
 
-##### 3. Create virtual environment and activate it
+##### 3. Create virtual environment and activate it:
 
 Make sure you are located in project repository!
 
@@ -66,20 +66,20 @@ python -m venv venv
 source MenuApp/venv/Scripts/activate
 ``` 
 
-##### 4. Install requirements
+##### 4. Install requirements:
 
 ```bash
 pip install -r MenuApp/requirements.txt
 ```
 
-##### 5. Apply migrations
+##### 5. Apply migrations:
 
 ```bash
 cd MenuApp/
 alembic upgrade head
 ```
 
-##### 6. Run the project
+##### 6. Run the project:
 
 ```bash
 uvicorn src.main:app --reload
