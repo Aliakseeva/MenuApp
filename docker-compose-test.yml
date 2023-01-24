@@ -5,43 +5,41 @@ services:
     container_name: app_tests
     image: python:3.10-slim
     volumes:
-      - .:/tests/
-    working_dir: /tests/
+#      - ./MenuApp:/app/MenuApp
+      - .:/app_tests/
+    working_dir: /app_tests/
     command:
+#      bash -c "pip install -r requirements.txt && alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
       bash -c "pip install -r MenuApp/requirements.txt && cd MenuApp && alembic upgrade head && cd .. && pytest Test_MenuApp/test_app/ -v"
+
     depends_on:
-      - postgresql
-    restart:
-      always
+      - postgres_tests
     ports:
       - 8001:8001
     networks:
-      - tests_db_network
+      - test_db_network
 
-
-  postgresql_tests:
-      container_name: postgresql_tests
+  postgres_tests:
+      container_name: postgres_tests
       image: postgres:15.1-alpine
-      environment:
+#      environment:
 #        POSTGRES_DB: "postgres"
 #        POSTGRES_USER: "postgres"
 #        POSTGRES_PASSWORD: "postgres"
-        POSTGRES_INITDB_ARGS: "-A md5"
+#        POSTGRES_INITDB_ARGS: "-A md5"
       env_file:
-        Test_MenuApp/.env
-      restart:
-        always
+        Test_MenuApp/env/.env
+#      restart: on-failure
       expose:
         - 5432
       networks:
-        - tests_db_network
+        - test_db_network
       healthcheck:
-        test: [ "CMD-SHELL", "pg_isready -d $${DB_NAME} -U $${DB_USER}" ]
-        interval: 10s
-        timeout: 5s
+        test: [ "CMD-SHELL", "pg_isready $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+        interval: 5s
+        timeout: 10s
         retries: 5
-        start_period: 10s
 
 networks:
-  tests_db_network:
+  test_db_network:
     driver: bridge
