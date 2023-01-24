@@ -24,7 +24,7 @@ git clone https://github.com/Aliakseeva/MenuApp
 
 ##### 2. Run docker-compose
 
-Make sure you are located in /MenuApp repository!
+Make sure you are located in project repository!
 
 ```bash
 docker-compose -f docker-compose.yml up -d
@@ -57,24 +57,25 @@ DB_PASS=postgres
 
 ##### 3. Create virtual environment and activate it
 
-Make sure you are located in /MenuApp repository!
+Make sure you are located in project repository!
 
 ```bash
 python -m venv venv
 ```
 ```bash
-source venv/Scripts/activate
+source MenuApp/venv/Scripts/activate
 ``` 
 
 ##### 4. Install requirements
 
 ```bash
-pip install -r requirements.txt
+pip install -r MenuApp/requirements.txt
 ```
 
 ##### 5. Apply migrations
 
 ```bash
+cd MenuApp/
 alembic upgrade head
 ```
 
