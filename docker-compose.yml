@@ -1,54 +1,43 @@
 version: '3.7'
 
 services:
-  app:
-    container_name: app
-    image: python:3.10-slim
-    volumes:
-      - ./MenuApp:/app/MenuApp
-    working_dir: /app/MenuApp
-    command:
-      bash -c "pip install -r requirements.txt && alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
-    depends_on:
-      - postgresql
-    ports:
-      - 8000:8000
-    networks:
-      - app_db_network
-
-  app_tests:
-    container_name: app_tests
-    image: python:3.10-slim
-    volumes:
-      - .:/tests/
-    working_dir: /tests/
-    command:
-      bash -c "pip install -r MenuApp/requirements.txt && cd MenuApp && alembic upgrade head && cd .. && pytest Test_MenuApp/test_app/ -v"
-    depends_on:
-      - postgresql
-    ports:
-      - 8001:8001
-    networks:
-      - tests_db_network
-
+#  app:
+#    container_name: app
+#    image: python:3.10-slim
+#    volumes:
+#      - ./MenuApp:/app/MenuApp
+#    working_dir: /app/MenuApp
+#    command:
+#      bash -c "pip install -r requirements.txt && alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
+#    depends_on:
+#      - postgresql
+#    ports:
+#      - 8000:8000
+#    networks:
+#      - app_db_network
 
   postgresql:
       container_name: postgresql
       image: postgres:15.1-alpine
       environment:
-        POSTGRES_DB: "postgres"
-        POSTGRES_USER: "postgres"
-        POSTGRES_PASSWORD: "postgres"
+#        POSTGRES_DB: "postgres"
+#        POSTGRES_USER: "postgres"
+#        POSTGRES_PASSWORD: "postgres"
         POSTGRES_INITDB_ARGS: "-A md5"
+      env_file:
+        MenuApp/.env
+      restart: unless-stopped
       expose:
         - 5432
       networks:
         - app_db_network
-        - tests_db_network
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -d $${DB_NAME} -U $${DB_USER}" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 10s
 
 networks:
   app_db_network:
-    driver: bridge
-
-  tests_db_network:
     driver: bridge
