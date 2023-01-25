@@ -11,6 +11,7 @@ Restaurant menu REST API
 📝 Alembic database migration tool
 🦄 Uvicorn ASGI web server
 🐳 Docker containers
+✅ Pytest
 ```
 
 # DOCKER RUN
