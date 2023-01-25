@@ -1,19 +1,19 @@
 version: '3.7'
 
 services:
-  app:
-    container_name: app
+  app_tests:
+    container_name: app_tests
     image: python:3.10-slim
     volumes:
       - .:/app/
     working_dir: /app/
+    env_file:
+      Test_MenuApp/.env
     command:
       bash -c "pip install -r MenuApp/requirements.txt && cd MenuApp && alembic upgrade head && cd .. && pytest Test_MenuApp/test_app/ -v"
     depends_on:
       postgres_tests:
         condition: service_healthy
-    env_file:
-      Test_MenuApp/.env
     networks:
       - test_db_network
 
@@ -30,10 +30,11 @@ services:
       networks:
         - test_db_network
       healthcheck:
-        test: [ "CMD-SHELL", "pg_isready $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+        test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h $${URL_DB} -p $${DB_PORT}"]
         interval: 5s
         timeout: 10s
         retries: 5
+
 
 networks:
   test_db_network:

@@ -7,6 +7,8 @@ services:
     volumes:
       - ./MenuApp:/app/MenuApp
     working_dir: /app/MenuApp
+    env_file:
+      MenuApp/.env
     command:
       bash -c "pip install -r requirements.txt && alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
     ports:
@@ -28,7 +30,7 @@ services:
       networks:
         - app_db_network
       healthcheck:
-        test: [ "CMD-SHELL", "pg_isready $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+        test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h $${URL_DB} -p $${DB_PORT}"]
         interval: 5s
         timeout: 10s
         retries: 5
