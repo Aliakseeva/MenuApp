@@ -10,7 +10,8 @@ services:
     command:
       bash -c "pip install -r MenuApp/requirements.txt && cd MenuApp && alembic upgrade head && cd .. && pytest Test_MenuApp/test_app/ -v"
     depends_on:
-      - postgres_tests
+      postgres_tests:
+        condition: service_healthy
     env_file:
       Test_MenuApp/.env
     networks:
