@@ -1,26 +1,32 @@
 from typing import List
 
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
+from ..cache import clear_cache, get_from_cache, set_to_cache
+from ..crud import create, delete, read, update
 from ..database import get_db
 from ..schemas import dish_schemas as d
-from ..crud import delete, read, create, update
-from ..cache import *
 
-
-router = APIRouter(tags=['Dishes'],
-                   prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes')
+router = APIRouter(
+    tags=['Dishes'], prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes',
+)
 
 
 @router.post('/', response_model=d.Dish, status_code=201)
-def create_dish(menu_id: int, submenu_id: int,
-                dish: d.DishCreateUpdate, db: Session = Depends(get_db)):
+def create_dish(
+    menu_id: int,
+    submenu_id: int,
+    dish: d.DishCreateUpdate,
+    db: Session = Depends(get_db),
+):
     """Creating a new dish"""
 
     key = f'/api/v1/menus/{menu_id}'
-    new_dish = create.create_dish(db=db, dish=dish, menu_id=menu_id, submenu_id=submenu_id)
+    new_dish = create.create_dish(
+        db=db, dish=dish, menu_id=menu_id, submenu_id=submenu_id,
+    )
     if new_dish:
         clear_cache(key)
         return new_dish
@@ -40,7 +46,9 @@ def get_all_dishes(menu_id: int, submenu_id: int, db: Session = Depends(get_db))
 
 
 @router.get('/{dish_id}', response_model=d.Dish)
-def get_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db)):
+def get_dish(
+    menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db),
+):
     """Gets certain dish by id"""
 
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
@@ -55,8 +63,13 @@ def get_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(
 
 
 @router.patch('/{dish_id}', response_model=d.Dish)
-def update_dish(menu_id: int, submenu_id: int, dish_id: int,
-                dish: d.DishCreateUpdate, db: Session = Depends(get_db)):
+def update_dish(
+    menu_id: int,
+    submenu_id: int,
+    dish_id: int,
+    dish: d.DishCreateUpdate,
+    db: Session = Depends(get_db),
+):
     """Updating the dish by id"""
 
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
@@ -72,11 +85,15 @@ def update_dish(menu_id: int, submenu_id: int, dish_id: int,
 
 
 @router.delete('/{dish_id}', response_model=None)
-def delete_dish(menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db)):
+def delete_dish(
+    menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db),
+):
     """Deletes the dish by id"""
 
     key = f'/api/v1/menus/{menu_id}'
-    del_dish = delete.delete_dish(db=db, dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id)
+    del_dish = delete.delete_dish(
+        db=db, dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id,
+    )
     if del_dish:
         clear_cache(key)
         return {'status': True, 'message': 'The dish has been deleted'}

@@ -1,12 +1,15 @@
-from MenuApp.src.main import app
 from fastapi.testclient import TestClient
 
+from MenuApp.src.main import app
 
 client = TestClient(app)
 
 URL = '/api/v1/menus'
 DATA = {'title': 'Menu title', 'description': 'Menu description'}
-UPDATED_DATA = {'title': 'Upd menu title', 'description': 'Upd menu description'}
+UPDATED_DATA = {
+    'title': 'Upd menu title',
+    'description': 'Upd menu description',
+}
 
 
 class TestMenu:
@@ -62,7 +65,10 @@ class TestMenu:
     def test_menu_delete(self):
         response = client.delete(f'{URL}/{self.menu_id}')
         assert response.status_code == 200
-        assert response.json() == {'status': True, 'message': 'The menu has been deleted'}
+        assert response.json() == {
+            'status': True,
+            'message': 'The menu has been deleted',
+        }
 
         response404 = client.get(f'{URL}/{self.menu_id}')
         assert response404.status_code == 404

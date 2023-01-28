@@ -15,4 +15,3 @@ class Menu(BaseModel):
 class MenuCreateUpdate(BaseModel):
     title: str
     description: str
-

@@ -1,8 +1,7 @@
 ﻿from fastapi import FastAPI
 
 from .database import redis_client
-from .routers import menu_router, submenu_router, dish_router
-
+from .routers import dish_router, menu_router, submenu_router
 
 app = FastAPI()
 app.include_router(router=menu_router.router)

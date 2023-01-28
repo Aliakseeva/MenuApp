@@ -1,12 +1,22 @@
-from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy import create_engine
 import redis
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-from .config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, REDIS_HOST, REDIS_PORT, REDIS_DB
-
+from .config import (
+    DB_HOST,
+    DB_NAME,
+    DB_PASS,
+    DB_PORT,
+    DB_USER,
+    REDIS_DB,
+    REDIS_HOST,
+    REDIS_PORT,
+)
 
 LOCAL_REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
-redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
+redis_client = redis.Redis(
+    host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True,
+)
 
 DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
@@ -22,4 +32,3 @@ def get_db():
         yield db
     finally:
         db.close()
-

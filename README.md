@@ -65,7 +65,7 @@ python -m venv venv
 ```
 ```bash
 source MenuApp/venv/Scripts/activate
-``` 
+```
 
 ##### 4. Install requirements:
 

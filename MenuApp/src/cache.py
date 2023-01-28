@@ -1,4 +1,3 @@
-import redis
 import json
 
 from .database import redis_client

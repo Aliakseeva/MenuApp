@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from ..models import Menu, Submenu, Dish
+
+from ..models import Dish, Menu, Submenu
 
 
 def get_menu_by_id(db: Session, menu_id: int):

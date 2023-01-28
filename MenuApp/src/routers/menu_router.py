@@ -1,14 +1,13 @@
 from typing import List
 
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
+from ..cache import clear_cache, get_from_cache, set_to_cache
+from ..crud import create, delete, read, update
 from ..database import get_db
 from ..schemas import menu_schemas as m
-from ..crud import delete, read, create, update
-from ..cache import *
-
 
 router = APIRouter(tags=['Menus'], prefix='/api/v1/menus')
 

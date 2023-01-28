@@ -1,19 +1,30 @@
-from MenuApp.src.main import app
 from fastapi.testclient import TestClient
 
+from MenuApp.src.main import app
 
 client = TestClient(app)
 
-response_menu_post = client.post('/api/v1/menus', json={'title': 'Menu title', 'description': 'Menu description'})
+response_menu_post = client.post(
+    '/api/v1/menus', json={'title': 'Menu title', 'description': 'Menu description'},
+)
 menu_id = response_menu_post.json()['id']
 
-response_sm_post = client.post(f'/api/v1/menus/{menu_id}/submenus',
-                               json={'title': 'Submenu title', 'description': 'Submenu description'})
+response_sm_post = client.post(
+    f'/api/v1/menus/{menu_id}/submenus',
+    json={'title': 'Submenu title', 'description': 'Submenu description'},
+)
 sm_id = response_sm_post.json()['id']
 
 URL = f'/api/v1/menus/{menu_id}/submenus/{sm_id}/dishes'
-DATA = {'title': 'Dish title', 'description': 'Dish description', 'price': '99.99'}
-UPDATED_DATA = {'title': 'Upd dish title', 'description': 'Upd dish description', 'price': '100.00'}
+DATA = {
+    'title': 'Dish title',
+    'description': 'Dish description', 'price': '99.99',
+}
+UPDATED_DATA = {
+    'title': 'Upd dish title',
+    'description': 'Upd dish description',
+    'price': '100.00',
+}
 
 
 class TestDish:
@@ -78,7 +89,10 @@ class TestDish:
     def test_sm_delete(self):
         response = client.delete(f'{URL}/{self.dish_id}')
         assert response.status_code == 200
-        assert response.json() == {'status': True, 'message': 'The dish has been deleted'}
+        assert response.json() == {
+            'status': True,
+            'message': 'The dish has been deleted',
+        }
 
         response_none = client.get(URL)
         assert response_none.json() == []

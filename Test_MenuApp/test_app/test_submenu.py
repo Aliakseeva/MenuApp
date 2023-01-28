@@ -1,10 +1,12 @@
-from MenuApp.src.main import app
 from fastapi.testclient import TestClient
 
+from MenuApp.src.main import app
 
 client = TestClient(app)
 
-response_menu_post = client.post('/api/v1/menus', json={'title': 'Menu title', 'description': 'Menu description'})
+response_menu_post = client.post(
+    '/api/v1/menus', json={'title': 'Menu title', 'description': 'Menu description'},
+)
 menu_id = response_menu_post.json()['id']
 
 URL = f'/api/v1/menus/{menu_id}/submenus'
@@ -69,7 +71,10 @@ class TestSubmenu:
     def test_sm_delete(self):
         response = client.delete(f'{URL}/{self.sm_id}')
         assert response.status_code == 200
-        assert response.json() == {'status': True, 'message': 'The submenu has been deleted'}
+        assert response.json() == {
+            'status': True,
+            'message': 'The submenu has been deleted',
+        }
 
         response_none = client.get(URL)
         assert response_none.json() == []

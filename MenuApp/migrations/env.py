@@ -1,15 +1,12 @@
+import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
 from alembic import context
-
-import sys
-sys.path = ["", ".."] + sys.path[1:]
-
-from src.config import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT
+from sqlalchemy import engine_from_config, pool
+from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from src.models import metadata
 
+sys.path = ['', '..'] + sys.path[1:]
 
 
 # this is the Alembic Config object, which provides
@@ -52,12 +49,12 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = config.get_main_option('sqlalchemy.url')
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
+        dialect_opts={'paramstyle': 'named'},
     )
 
     with context.begin_transaction():
@@ -73,13 +70,14 @@ def run_migrations_online() -> None:
     """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section),
-        prefix="sqlalchemy.",
+        prefix='sqlalchemy.',
         poolclass=pool.NullPool,
     )
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata,
         )
 
         with context.begin_transaction():
