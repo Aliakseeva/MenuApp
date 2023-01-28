@@ -23,6 +23,8 @@ services:
       env_file:
         Test_MenuApp/.env
       restart: on-failure
+      environment:
+        POSTGRES_INITDB_ARGS: "-A md5"
       ports:
         - 5433:5432
       expose:
