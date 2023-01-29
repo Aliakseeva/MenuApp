@@ -6,7 +6,8 @@ Restaurant menu REST API
 ```
 🐍 Python3
 ⚡ FastAPI Web framework
-🐘 PostgreSQL
+🐘 PostgreSQL database
+⏳ Redis-cache
 📜 SQLAlchemy ORM
 📝 Alembic database migration tool
 🦄 Uvicorn ASGI web server
@@ -54,6 +55,10 @@ DB_PORT=5432
 DB_NAME=postgres
 DB_USER=postgres
 DB_PASS=postgres
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
 ```
 
 ##### 3. Create virtual environment and activate it:
@@ -62,8 +67,6 @@ Make sure you are located in project repository!
 
 ```bash
 python -m venv venv
-```
-```bash
 source MenuApp/venv/Scripts/activate
 ```
 
@@ -80,9 +83,10 @@ cd MenuApp/
 alembic upgrade head
 ```
 
-##### 6. Run the project:
+##### 6. Run redis-server and start the project:
 
 ```bash
+redis-server
 uvicorn src.main:app --reload
 ```
 
