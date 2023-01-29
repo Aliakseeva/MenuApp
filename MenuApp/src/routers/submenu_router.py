@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from ..cache import clear_cache, get_from_cache, set_to_cache
+from ..cache import Cache
 from ..crud import create, delete, read, update
 from ..database import get_db
 from ..schemas import submenu_schemas as sm
@@ -25,7 +25,7 @@ def create_submenu(
         db=db, submenu=submenu, menu_id=menu_id,
     )
     if new_submenu:
-        clear_cache(key)
+        Cache.clear_cache(key)
         return new_submenu
     raise HTTPException(status_code=405, detail='Invalid input')
 
@@ -34,25 +34,24 @@ def create_submenu(
 def read_all_submenus(menu_id: int, db: Session = Depends(get_db)):
 
     key = f'/api/v1/menus/{menu_id}/submenus'
-    cached_l = get_from_cache(key)
+    cached_l = Cache.get_from_cache(key)
     if cached_l:
         return cached_l
     submenus_l = read.get_submenus(db=db, menu_id=menu_id)
-    set_to_cache(key, jsonable_encoder(submenus_l))
+    Cache.set_to_cache(key, jsonable_encoder(submenus_l))
     return submenus_l
 
 
 @router.get('/{submenu_id}', response_model=sm.Submenu, summary='Get submenu details', status_code=HTTPStatus.OK)
 def read_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
-    """Gets the submenu"""
 
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}'
-    cached_submenu = get_from_cache(key)
+    cached_submenu = Cache.get_from_cache(key)
     if cached_submenu:
         return cached_submenu
     submenu = read.get_submenu_by_id(db=db, submenu_id=submenu_id)
     if submenu:
-        set_to_cache(key, jsonable_encoder(submenu))
+        Cache.set_to_cache(key, jsonable_encoder(submenu))
         return submenu
     raise HTTPException(status_code=404, detail='submenu not found')
 
@@ -71,7 +70,7 @@ def update_submenu(
 
     upd_submenu.title = submenu.title
     upd_submenu.description = submenu.description
-    set_to_cache(key, jsonable_encoder(upd_submenu))
+    Cache.set_to_cache(key, jsonable_encoder(upd_submenu))
     return update.update_submenu(db=db, submenu_id=submenu_id)
 
 
@@ -83,6 +82,6 @@ def delete_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db))
         db=db, menu_id=menu_id, submenu_id=submenu_id,
     )
     if del_submenu:
-        clear_cache(key)
+        Cache.clear_cache(key)
         return {'status': True, 'message': 'The submenu has been deleted'}
     raise HTTPException(status_code=404, detail='submenu not found')

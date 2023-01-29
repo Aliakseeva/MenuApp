@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from ..cache import clear_cache, get_from_cache, set_to_cache
+from ..cache import Cache
 from ..crud import create, delete, read, update
 from ..database import get_db
 from ..schemas import dish_schemas as d
@@ -27,7 +27,7 @@ def create_dish(
         db=db, dish=dish, menu_id=menu_id, submenu_id=submenu_id,
     )
     if new_dish:
-        clear_cache(key)
+        Cache.clear_cache(key)
         return new_dish
     raise HTTPException(status_code=405, detail='Invalid input')
 
@@ -36,11 +36,11 @@ def create_dish(
 def get_all_dishes(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
 
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes'
-    cached_l = get_from_cache(key)
+    cached_l = Cache.get_from_cache(key)
     if cached_l:
         return cached_l
     dishes_l = read.get_dishes(db=db, submenu_id=submenu_id)
-    set_to_cache(key, jsonable_encoder(dishes_l))
+    Cache.set_to_cache(key, jsonable_encoder(dishes_l))
     return dishes_l
 
 
@@ -49,12 +49,12 @@ def get_dish(
     menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db),
 ):
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
-    cached_dish = get_from_cache(key)
+    cached_dish = Cache.get_from_cache(key)
     if cached_dish:
         return cached_dish
     dish = read.get_dish_by_id(db=db, dish_id=dish_id)
     if dish:
-        set_to_cache(key, jsonable_encoder(dish))
+        Cache.set_to_cache(key, jsonable_encoder(dish))
         return dish
     raise HTTPException(status_code=404, detail='dish not found')
 
@@ -74,7 +74,7 @@ def update_dish(
     upd_dish.title = dish.title
     upd_dish.description = dish.description
     upd_dish.price = dish.price
-    set_to_cache(key, jsonable_encoder(upd_dish))
+    Cache.set_to_cache(key, jsonable_encoder(upd_dish))
     return update.update_dish(db=db, dish_id=dish_id)
 
 
@@ -87,6 +87,6 @@ def delete_dish(
         db=db, dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id,
     )
     if del_dish:
-        clear_cache(key)
+        Cache.clear_cache(key)
         return {'status': True, 'message': 'The dish has been deleted'}
     raise HTTPException(status_code=404, detail='dish not found')
