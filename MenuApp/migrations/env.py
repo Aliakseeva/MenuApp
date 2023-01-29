@@ -1,4 +1,3 @@
-import sys
 from logging.config import fileConfig
 
 from alembic import context
@@ -6,7 +5,7 @@ from sqlalchemy import engine_from_config, pool
 from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from src.models import metadata
 
-sys.path = ['', '..'] + sys.path[1:]
+# sys.path = ['', '..'] + sys.path[1:]
 
 
 # this is the Alembic Config object, which provides

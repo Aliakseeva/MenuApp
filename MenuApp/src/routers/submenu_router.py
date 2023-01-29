@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,17 +11,15 @@ from ..database import get_db
 from ..schemas import submenu_schemas as sm
 
 router = APIRouter(
-    tags=['Submenus'],
+    tags=['Submenu'],
     prefix='/api/v1/menus/{menu_id}/submenus',
 )
 
 
-@router.post('/', response_model=sm.Submenu, status_code=201)
+@router.post('/', response_model=sm.Submenu, summary='Create a new submenu', status_code=HTTPStatus.CREATED)
 def create_submenu(
     menu_id: int, submenu: sm.SubmenuCreateUpdate, db: Session = Depends(get_db),
 ):
-    """Creates a new submenu"""
-
     key = f'/api/v1/menus/{menu_id}'
     new_submenu = create.create_submenu(
         db=db, submenu=submenu, menu_id=menu_id,
@@ -28,11 +27,11 @@ def create_submenu(
     if new_submenu:
         clear_cache(key)
         return new_submenu
+    raise HTTPException(status_code=405, detail='Invalid input')
 
 
-@router.get('/', response_model=List[sm.Submenu])
+@router.get('/', response_model=List[sm.Submenu], summary='Get a submenus list', status_code=HTTPStatus.OK)
 def read_all_submenus(menu_id: int, db: Session = Depends(get_db)):
-    """Gets a list of submenus"""
 
     key = f'/api/v1/menus/{menu_id}/submenus'
     cached_l = get_from_cache(key)
@@ -43,7 +42,7 @@ def read_all_submenus(menu_id: int, db: Session = Depends(get_db)):
     return submenus_l
 
 
-@router.get('/{submenu_id}', response_model=sm.Submenu)
+@router.get('/{submenu_id}', response_model=sm.Submenu, summary='Get submenu details', status_code=HTTPStatus.OK)
 def read_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
     """Gets the submenu"""
 
@@ -58,15 +57,13 @@ def read_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail='submenu not found')
 
 
-@router.patch('/{submenu_id}', response_model=sm.Submenu)
+@router.patch('/{submenu_id}', response_model=sm.Submenu, summary='Update the submenu', status_code=HTTPStatus.OK)
 def update_submenu(
     menu_id: int,
     submenu_id: int,
     submenu: sm.SubmenuCreateUpdate,
     db: Session = Depends(get_db),
 ):
-    """Updates the submenu"""
-
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}'
     upd_submenu = read.get_submenu_by_id(db=db, submenu_id=submenu_id)
     if not upd_submenu:
@@ -78,9 +75,8 @@ def update_submenu(
     return update.update_submenu(db=db, submenu_id=submenu_id)
 
 
-@router.delete('/{submenu_id}', response_model=None)
+@router.delete('/{submenu_id}', response_model=None, summary='Delete the submenu', status_code=HTTPStatus.OK)
 def delete_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
-    """Deletes the submenu"""
 
     key = f'/api/v1/menus/{menu_id}'
     del_submenu = delete.delete_submenu(
@@ -89,3 +85,4 @@ def delete_submenu(menu_id: int, submenu_id: int, db: Session = Depends(get_db))
     if del_submenu:
         clear_cache(key)
         return {'status': True, 'message': 'The submenu has been deleted'}
+    raise HTTPException(status_code=404, detail='submenu not found')

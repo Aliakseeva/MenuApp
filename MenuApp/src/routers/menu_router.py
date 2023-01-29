@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -9,12 +10,11 @@ from ..crud import create, delete, read, update
 from ..database import get_db
 from ..schemas import menu_schemas as m
 
-router = APIRouter(tags=['Menus'], prefix='/api/v1/menus')
+router = APIRouter(tags=['Menu'], prefix='/api/v1/menus')
 
 
-@router.get('/', response_model=List[m.Menu])
+@router.get('/', response_model=List[m.Menu], summary='Get a menus list', status_code=HTTPStatus.OK)
 def get_all_menus(db: Session = Depends(get_db)):
-    """Gets a list of menu"""
 
     key = '/api/v1/menus'
     cached_l = get_from_cache(router.prefix)
@@ -25,9 +25,8 @@ def get_all_menus(db: Session = Depends(get_db)):
     return menus_l
 
 
-@router.get('/{menu_id}', response_model=m.Menu)
+@router.get('/{menu_id}', response_model=m.Menu, summary='Get menu details', status_code=HTTPStatus.OK)
 def get_menu(menu_id: int, db: Session = Depends(get_db)):
-    """Gets certain menu by id"""
 
     key = f'/api/v1/menus/{menu_id}'
     cached_menu = get_from_cache(key)
@@ -40,38 +39,36 @@ def get_menu(menu_id: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail='menu not found')
 
 
-@router.post('/', response_model=m.Menu, status_code=201)
+@router.post('/', response_model=m.Menu, summary='Create a new menu', status_code=HTTPStatus.CREATED)
 def create_menu(menu: m.MenuCreateUpdate, db: Session = Depends(get_db)):
-    """Creates a new menu"""
 
     key = '/api/v1/menus'
     new_menu = create.create_menu(db=db, menu=menu)
     if new_menu:
         clear_cache(key)
         return new_menu
+    raise HTTPException(status_code=405, detail='Invalid input')
 
 
-@router.patch('/{menu_id}', response_model=m.Menu)
+@router.patch('/{menu_id}', response_model=m.Menu, summary='Update the menu', status_code=HTTPStatus.OK)
 def update_menu(menu_id: int, menu: m.MenuCreateUpdate, db: Session = Depends(get_db)):
-    """Updates the menu"""
 
     key = f'/api/v1/menus/{menu_id}'
     upd_menu = read.get_menu_by_id(db=db, menu_id=menu_id)
     if not upd_menu:
         raise HTTPException(status_code=404, detail='menu not found')
-    else:
-        upd_menu.title = menu.title
-        upd_menu.description = menu.description
-        set_to_cache(key, jsonable_encoder(upd_menu))
-        return update.update_menu(db=db, menu_id=menu_id)
+    upd_menu.title = menu.title
+    upd_menu.description = menu.description
+    set_to_cache(key, jsonable_encoder(upd_menu))
+    return update.update_menu(db=db, menu_id=menu_id)
 
 
-@router.delete('/{menu_id}', response_model=None)
+@router.delete('/{menu_id}', response_model=None, summary='Delete the menu', status_code=HTTPStatus.OK)
 def delete_menu(menu_id: int, db: Session = Depends(get_db)):
-    """Deletes the menu"""
 
     key = '/api/v1/menus'
     del_menu = delete.delete_menu(db=db, menu_id=menu_id)
     if del_menu:
         clear_cache(key)
         return {'status': True, 'message': 'The menu has been deleted'}
+    raise HTTPException(status_code=404, detail='menu not found')
