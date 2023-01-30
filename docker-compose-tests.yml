@@ -3,16 +3,21 @@ version: '3.7'
 services:
   app_tests:
     container_name: app_tests
-    image: python:3.10-slim
-    volumes:
-      - .:/app/
-    working_dir: /app/
+#    image: python:3.10-slim
+#    volumes:
+#      - .:/app/
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app/MenuApp
     env_file:
       Test_MenuApp/.env
     command:
-      bash -c "pip install -r MenuApp/requirements.txt && cd MenuApp && alembic upgrade head && cd .. && pytest Test_MenuApp/test_app/ -v"
+      bash -c "alembic upgrade head && cd .. && pytest Test_MenuApp/test_app/ -v"
     depends_on:
       postgres_tests:
+        condition: service_healthy
+      redis_tests:
         condition: service_healthy
     networks:
       - test_db_network
@@ -26,14 +31,12 @@ services:
       environment:
         POSTGRES_INITDB_ARGS: "-A md5"
       ports:
-        - 5433:5432
-      expose:
-        - 5432
+        - 5434:5432
       networks:
         - test_db_network
       healthcheck:
         test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h $${URL_DB} -p $${DB_PORT}"]
-        interval: 5s
+        interval: 10s
         timeout: 10s
         retries: 5
 
@@ -41,14 +44,16 @@ services:
     container_name: redis_tests
     image: redis:latest
     restart: on-failure
-    expose:
-      - 6379
     command: redis-server
     ports:
-      - 6380:6379
+      - 6381:6379
     networks:
       - test_db_network
-
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
 networks:
   test_db_network:

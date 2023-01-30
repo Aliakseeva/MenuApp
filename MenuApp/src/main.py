@@ -4,7 +4,9 @@ from fastapi.openapi.utils import get_openapi
 from .database import redis_client
 from .routers import dish_router, menu_router, submenu_router
 
-app = FastAPI(swagger_ui_parameters={'syntaxHighlight.theme': 'nord'})
+app = FastAPI(
+    docs_url='/', swagger_ui_parameters={'syntaxHighlight.theme': 'nord'},
+)
 app.include_router(router=menu_router.router)
 app.include_router(router=submenu_router.router)
 app.include_router(router=dish_router.router)

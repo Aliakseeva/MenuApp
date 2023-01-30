@@ -1,8 +1,9 @@
 # MenuApp
-Restaurant menu REST API
+Restaurant menu REST API with CRUD-operations, cache and pancakes!
 
+See OpenAPI Specification: http://0.0.0.0:8000/
 
-# Based on:
+## Based on:
 ```
 🐍 Python3
 ⚡ FastAPI Web framework
@@ -15,7 +16,7 @@ Restaurant menu REST API
 ✅ Pytest
 ```
 
-# DOCKER RUN
+## DOCKER RUN:
 
 
 ##### 1. Clone repository:
@@ -38,7 +39,7 @@ docker-compose up
 docker-compose -f docker-compose-tests.yml up
 ```
 
-# MANUAL RUN
+## MANUAL RUN:
 
 
 ##### 1. Clone repository:
