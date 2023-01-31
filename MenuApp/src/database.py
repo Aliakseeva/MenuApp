@@ -1,6 +1,6 @@
 import redis
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 from .config import (
     DB_HOST,
@@ -26,7 +26,8 @@ Base = declarative_base()
 local_session = sessionmaker(bind=engine)
 
 
-def get_db():
+def get_db() -> Session:
+    """Create session generator to establish all conversations with the database"""
     db = local_session()
     try:
         yield db

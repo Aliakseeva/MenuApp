@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -13,9 +12,28 @@ from ..schemas import menu_schemas as m
 router = APIRouter(tags=['Menu'], prefix='/api/v1/menus')
 
 
-@router.get('/', response_model=List[m.Menu], summary='Get a menus list', status_code=HTTPStatus.OK)
-def get_all_menus(db: Session = Depends(get_db)):
+@router.post(
+    '/',
+    response_model=m.Menu,
+    summary='Create a new menu',
+    status_code=HTTPStatus.CREATED,
+)
+def create_menu(menu: m.MenuCreateUpdate, db: Session = Depends(get_db)) -> dict[str, int]:
+    key = '/api/v1/menus'
+    new_menu = create.create_menu(db=db, menu=menu)
+    if new_menu:
+        Cache.clear_cache(key)
+        return new_menu
+    raise HTTPException(status_code=405, detail='Invalid input')
 
+
+@router.get(
+    '/',
+    response_model=list[m.Menu],
+    summary='Get a menus list',
+    status_code=HTTPStatus.OK,
+)
+def get_all_menus(db: Session = Depends(get_db)) -> list[dict[str, int]]:
     key = '/api/v1/menus'
     cached_l = Cache.get_from_cache(router.prefix)
     if cached_l:
@@ -25,9 +43,11 @@ def get_all_menus(db: Session = Depends(get_db)):
     return menus_l
 
 
-@router.get('/{menu_id}', response_model=m.Menu, summary='Get menu details', status_code=HTTPStatus.OK)
-def get_menu(menu_id: int, db: Session = Depends(get_db)):
-
+@router.get(
+    '/{menu_id}',
+    response_model=m.Menu, summary='Get menu details', status_code=HTTPStatus.OK,
+)
+def get_menu(menu_id: int, db: Session = Depends(get_db)) -> dict[str, int]:
     key = f'/api/v1/menus/{menu_id}'
     cached_menu = Cache.get_from_cache(key)
     if cached_menu:
@@ -39,20 +59,13 @@ def get_menu(menu_id: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail='menu not found')
 
 
-@router.post('/', response_model=m.Menu, summary='Create a new menu', status_code=HTTPStatus.CREATED)
-def create_menu(menu: m.MenuCreateUpdate, db: Session = Depends(get_db)):
-
-    key = '/api/v1/menus'
-    new_menu = create.create_menu(db=db, menu=menu)
-    if new_menu:
-        Cache.clear_cache(key)
-        return new_menu
-    raise HTTPException(status_code=405, detail='Invalid input')
-
-
-@router.patch('/{menu_id}', response_model=m.Menu, summary='Update the menu', status_code=HTTPStatus.OK)
-def update_menu(menu_id: int, menu: m.MenuCreateUpdate, db: Session = Depends(get_db)):
-
+@router.patch(
+    '/{menu_id}',
+    response_model=m.Menu, summary='Update the menu', status_code=HTTPStatus.OK,
+)
+def update_menu(
+    menu_id: int, menu: m.MenuCreateUpdate, db: Session = Depends(get_db),
+) -> dict[str, int]:
     key = f'/api/v1/menus/{menu_id}'
     upd_menu = read.get_menu_by_id(db=db, menu_id=menu_id)
     if not upd_menu:
@@ -63,9 +76,11 @@ def update_menu(menu_id: int, menu: m.MenuCreateUpdate, db: Session = Depends(ge
     return update.update_menu(db=db, menu_id=menu_id)
 
 
-@router.delete('/{menu_id}', response_model=None, summary='Delete the menu', status_code=HTTPStatus.OK)
-def delete_menu(menu_id: int, db: Session = Depends(get_db)):
-
+@router.delete(
+    '/{menu_id}',
+    response_model=None, summary='Delete the menu', status_code=HTTPStatus.OK,
+)
+def delete_menu(menu_id: int, db: Session = Depends(get_db)) -> dict[str, bool]:
     key = '/api/v1/menus'
     del_menu = delete.delete_menu(db=db, menu_id=menu_id)
     if del_menu:

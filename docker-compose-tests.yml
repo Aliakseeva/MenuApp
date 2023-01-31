@@ -3,9 +3,6 @@ version: '3.7'
 services:
   app_tests:
     container_name: app_tests
-#    image: python:3.10-slim
-#    volumes:
-#      - .:/app/
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,7 +10,7 @@ services:
     env_file:
       Test_MenuApp/.env
     command:
-      bash -c "alembic upgrade head && cd .. && pytest Test_MenuApp/test_app/ -v"
+      bash -c "alembic upgrade head && pytest /app/Test_MenuApp/test_app/ -vv"
     depends_on:
       postgres_tests:
         condition: service_healthy

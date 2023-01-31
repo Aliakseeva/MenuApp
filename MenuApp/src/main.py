@@ -14,8 +14,7 @@ app.include_router(router=dish_router.router)
 
 # @app.on_event('startup')
 # def startup():
-#     """Database cleaning after startup"""
-#
+#     """Clean database after startup"""
 #     db = local_session()
 #     db.query(Dish).delete()
 #     db.query(Submenu).delete()
@@ -26,8 +25,7 @@ app.include_router(router=dish_router.router)
 
 @app.on_event('shutdown')
 def shutdown_event():
-    """Clears cache"""
-
+    """Clear cache before shutdown"""
     redis_client.flushdb()
 
 
@@ -37,7 +35,8 @@ def custom_openapi():
     openapi_schema = get_openapi(
         title='MenuApp',
         version='beta',
-        description='This is a simple Restaurant Menu Server based on the OpenAPI 3.0 specification.\n'
+        description='This is a simple Restaurant Menu Server '
+                    'based on the OpenAPI 3.0 specification.\n'
                     'The project is based on next services:\n\n'
                     '🐍 Python3\n\n'
                     '⚡ FastAPI Web framework\n\n'

@@ -5,9 +5,6 @@ from sqlalchemy import engine_from_config, pool
 from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from src.models import *
 
-# sys.path = ['', '..'] + sys.path[1:]
-
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

@@ -12,7 +12,7 @@ class Menu(BaseModel):
         orm_mode = True
         schema_extra = {
             'example': {
-                'id': '00000',
+                'id': '0921',
                 'title': 'Breakfast',
                 'description': 'Breakfast menu description',
                 'submenus_count': 2,

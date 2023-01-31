@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -15,13 +14,18 @@ router = APIRouter(
 )
 
 
-@router.post('/', response_model=d.Dish, summary='Create a new dish', status_code=HTTPStatus.CREATED)
+@router.post(
+    '/',
+    response_model=d.Dish,
+    summary='Create a new dish',
+    status_code=HTTPStatus.CREATED,
+)
 def create_dish(
     menu_id: int,
     submenu_id: int,
     dish: d.DishCreateUpdate,
     db: Session = Depends(get_db),
-):
+) -> dict[str, int]:
     key = f'/api/v1/menus/{menu_id}'
     new_dish = create.create_dish(
         db=db, dish=dish, menu_id=menu_id, submenu_id=submenu_id,
@@ -32,9 +36,17 @@ def create_dish(
     raise HTTPException(status_code=405, detail='Invalid input')
 
 
-@router.get('/', response_model=List[d.Dish], summary='Get a dishes list', status_code=HTTPStatus.OK)
-def get_all_dishes(menu_id: int, submenu_id: int, db: Session = Depends(get_db)):
-
+@router.get(
+    '/',
+    response_model=list[d.Dish],
+    summary='Get a dishes list',
+    status_code=HTTPStatus.OK,
+)
+def get_all_dishes(
+    menu_id: int,
+    submenu_id: int,
+    db: Session = Depends(get_db),
+) -> list[dict[str, int]]:
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes'
     cached_l = Cache.get_from_cache(key)
     if cached_l:
@@ -44,10 +56,15 @@ def get_all_dishes(menu_id: int, submenu_id: int, db: Session = Depends(get_db))
     return dishes_l
 
 
-@router.get('/{dish_id}', response_model=d.Dish, summary='Get dish details', status_code=HTTPStatus.OK)
+@router.get(
+    '/{dish_id}',
+    response_model=d.Dish,
+    summary='Get dish details',
+    status_code=HTTPStatus.OK,
+)
 def get_dish(
     menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db),
-):
+) -> dict[str, int]:
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
     cached_dish = Cache.get_from_cache(key)
     if cached_dish:
@@ -59,14 +76,16 @@ def get_dish(
     raise HTTPException(status_code=404, detail='dish not found')
 
 
-@router.patch('/{dish_id}', response_model=d.Dish, summary='Update the dish', status_code=HTTPStatus.OK)
+@router.patch(
+    '/{dish_id}',
+    response_model=d.Dish,
+    summary='Update the dish',
+    status_code=HTTPStatus.OK,
+)
 def update_dish(
-    menu_id: int,
-    submenu_id: int,
-    dish_id: int,
-    dish: d.DishCreateUpdate,
-    db: Session = Depends(get_db),
-):
+    menu_id: int, submenu_id: int,
+    dish_id: int, dish: d.DishCreateUpdate, db: Session = Depends(get_db),
+) -> dict[str, int]:
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
     upd_dish = read.get_dish_by_id(db=db, dish_id=dish_id)
     if not upd_dish:
@@ -78,10 +97,16 @@ def update_dish(
     return update.update_dish(db=db, dish_id=dish_id)
 
 
-@router.delete('/{dish_id}', response_model=None, summary='Delete the dish', status_code=HTTPStatus.OK)
+@router.delete(
+    '/{dish_id}',
+    response_model=None,
+    summary='Delete the dish',
+    status_code=HTTPStatus.OK,
+)
 def delete_dish(
-    menu_id: int, submenu_id: int, dish_id: int, db: Session = Depends(get_db),
-):
+    menu_id: int, submenu_id: int,
+    dish_id: int, db: Session = Depends(get_db),
+) -> dict[str, bool]:
     key = f'/api/v1/menus/{menu_id}'
     del_dish = delete.delete_dish(
         db=db, dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id,
