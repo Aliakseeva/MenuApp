@@ -11,6 +11,7 @@ app.include_router(router=menu_router.router)
 app.include_router(router=submenu_router.router)
 app.include_router(router=dish_router.router)
 
+# TODO: удалить лишние куски кода (в комментариях)
 
 # @app.on_event('startup')
 # def startup():

@@ -1,32 +1,37 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from .read import get_dish_by_id, get_menu_by_id, get_submenu_by_id
 
 
-def delete_menu(db: Session, menu_id: int) -> bool:
+async def delete_menu(db: AsyncSession, menu_id: int) -> bool:
     """Delete the menu record in database.
 
         Parameters:
-            db: Session object,
+            db: AsyncSession object,
             menu_id: ID of which menu to delete.
 
         Returns:
             True: If deleted successfully,
             False: If any error occurred.
     """
-    del_menu = get_menu_by_id(db, menu_id)
-    if del_menu:
-        db.delete(del_menu)
-        db.commit()
+    # del_menu = get_menu_by_id(db, menu_id)
+    # if del_menu:
+    #     db.delete(del_menu)
+    #     db.commit()
+    del_menu = await get_menu_by_id(db, menu_id)
+    if del_menu:                        # TODO: сделать транзакцию
+        await db.delete(del_menu)
+        await db.commit()
         return True
     return False
 
 
-def delete_submenu(db: Session, menu_id: int, submenu_id: int) -> bool:
+async def delete_submenu(db: AsyncSession, menu_id: int, submenu_id: int) -> bool:
     """Delete the submenu record in database.
 
         Parameters:
-            db: Session object,
+            db: AsyncSession object,
             menu_id: Which menu ID the submenu belongs to.
             submenu_id: ID of which submenu to delete.
 
@@ -34,22 +39,22 @@ def delete_submenu(db: Session, menu_id: int, submenu_id: int) -> bool:
             True: If deleted successfully,
             False: If any error occurred.
         """
-    del_submenu = get_submenu_by_id(db, submenu_id)
+    del_submenu = await get_submenu_by_id(db, submenu_id)
     if del_submenu:
-        db_menu = get_menu_by_id(db=db, menu_id=menu_id)
+        db_menu = await get_menu_by_id(db=db, menu_id=menu_id)
         db_menu.submenus_count -= 1
         db_menu.dishes_count -= del_submenu.dishes_count
-        db.delete(del_submenu)
-        db.commit()
+        await db.delete(del_submenu)
+        await db.commit()
         return True
     return False
 
 
-def delete_dish(db: Session, dish_id: int, menu_id: int, submenu_id: int) -> bool:
+async def delete_dish(db: AsyncSession, dish_id: int, menu_id: int, submenu_id: int) -> bool:
     """Delete the dish record in database.
 
         Parameters:
-            db: Session object,
+            db: AsyncSession object,
             menu_id: Which menu ID the dish belongs to.
             submenu_id: Which submenu ID the dish belongs to.
             dish_id: ID of which dish to delete.
@@ -60,9 +65,13 @@ def delete_dish(db: Session, dish_id: int, menu_id: int, submenu_id: int) -> boo
         """
     del_dish = get_dish_by_id(db, dish_id)
     if del_dish:
-        get_menu_by_id(db=db, menu_id=menu_id).dishes_count -= 1
-        get_submenu_by_id(db=db, submenu_id=submenu_id).dishes_count -= 1
-        db.delete(del_dish)
-        db.commit()
+        menu = await get_menu_by_id(db=db, menu_id=menu_id)
+        menu.dishes_count -= 1
+
+        submenu = await get_submenu_by_id(db=db, submenu_id=submenu_id)
+        submenu.dishes_count -= 1
+
+        await db.delete(del_dish)
+        await db.commit()
         return True
     return False
