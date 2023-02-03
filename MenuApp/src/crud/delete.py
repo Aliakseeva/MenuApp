@@ -63,7 +63,9 @@ async def delete_dish(db: AsyncSession, dish_id: int, menu_id: int, submenu_id: 
             True: If deleted successfully,
             False: If any error occurred.
         """
-    del_dish = get_dish_by_id(db, dish_id)
+    del_dish = await get_dish_by_id(db, dish_id)
+    await db.delete(del_dish)
+    await db.commit()
     if del_dish:
         menu = await get_menu_by_id(db=db, menu_id=menu_id)
         menu.dishes_count -= 1
@@ -71,7 +73,5 @@ async def delete_dish(db: AsyncSession, dish_id: int, menu_id: int, submenu_id: 
         submenu = await get_submenu_by_id(db=db, submenu_id=submenu_id)
         submenu.dishes_count -= 1
 
-        await db.delete(del_dish)
-        await db.commit()
         return True
     return False

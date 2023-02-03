@@ -54,7 +54,8 @@ async def update_dish(db: AsyncSession, dish_id: int, new_title: str, new_descr:
             db: AsyncSession object,
             dish_id: ID of which dish to update,
             new_title: str with title to set,
-            new_descr: str with description to set.
+            new_descr: str with description to set,
+            new_price: str with price to set.
 
         Returns:
             upd_dish: The updated dish record.

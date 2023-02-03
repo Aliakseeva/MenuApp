@@ -21,14 +21,14 @@ router = APIRouter(
     summary='Create a new dish',
     status_code=HTTPStatus.CREATED,
 )
-def create_dish(
+async def create_dish(
         menu_id: int,
         submenu_id: int,
         dish: d.DishCreateUpdate,
         db: AsyncSession = Depends(get_db),
 ) -> dict[str, int]:
     key = f'/api/v1/menus/{menu_id}'
-    new_dish = create.create_dish(
+    new_dish = await create.create_dish(
         db=db, dish=dish, menu_id=menu_id, submenu_id=submenu_id,
     )
     if new_dish:
@@ -43,7 +43,7 @@ def create_dish(
     summary='Get a dishes list',
     status_code=HTTPStatus.OK,
 )
-def get_all_dishes(
+async def get_all_dishes(
         menu_id: int,
         submenu_id: int,
         db: AsyncSession = Depends(get_db),
@@ -52,7 +52,7 @@ def get_all_dishes(
     # cached_l = Cache.get_from_cache(key)
     # if cached_l:
     #     return cached_l
-    dishes_l = read.get_dishes(db=db, submenu_id=submenu_id)
+    dishes_l = await read.get_dishes(db=db, submenu_id=submenu_id)
     # Cache.set_to_cache(key, jsonable_encoder(dishes_l))
     return dishes_l
 
@@ -63,14 +63,14 @@ def get_all_dishes(
     summary='Get dish details',
     status_code=HTTPStatus.OK,
 )
-def get_dish(
+async def get_dish(
         menu_id: int, submenu_id: int, dish_id: int, db: AsyncSession = Depends(get_db),
 ) -> dict[str, int]:
     key = f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
     # cached_dish = Cache.get_from_cache(key)
     # if cached_dish:
     #     return cached_dish
-    dish = read.get_dish_by_id(db=db, dish_id=dish_id)
+    dish = await read.get_dish_by_id(db=db, dish_id=dish_id)
     if dish:
         # Cache.set_to_cache(key, jsonable_encoder(dish))
         return dish
@@ -106,12 +106,12 @@ async def update_dish(
     summary='Delete the dish',
     status_code=HTTPStatus.OK,
 )
-def delete_dish(
+async def delete_dish(
         menu_id: int, submenu_id: int,
         dish_id: int, db: AsyncSession = Depends(get_db),
 ) -> dict[str, bool]:
     key = f'/api/v1/menus/{menu_id}'
-    del_dish = delete.delete_dish(
+    del_dish = await delete.delete_dish(
         db=db, dish_id=dish_id, menu_id=menu_id, submenu_id=submenu_id,
     )
     if del_dish:

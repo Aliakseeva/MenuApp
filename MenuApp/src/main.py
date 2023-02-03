@@ -1,7 +1,9 @@
 ﻿from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
+from sqlalchemy import select
 
-from .database import redis_client
+from .database import redis_client, async_session
+from .models import Dish, Submenu, Menu
 from .routers import dish_router, menu_router, submenu_router
 
 app = FastAPI(
@@ -12,16 +14,6 @@ app.include_router(router=submenu_router.router)
 app.include_router(router=dish_router.router)
 
 # TODO: удалить лишние куски кода (в комментариях)
-
-# @app.on_event('startup')
-# def startup():
-#     """Clean database after startup"""
-#     db = local_session()
-#     db.query(Dish).delete()
-#     db.query(Submenu).delete()
-#     db.query(Menu).delete()
-#     db.commit()
-#     db.close()
 
 
 @app.on_event('shutdown')
