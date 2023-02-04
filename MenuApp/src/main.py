@@ -1,7 +1,6 @@
 ﻿from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from .database import redis_client
 from .routers import dish_router, menu_router, submenu_router
 
 app = FastAPI(
@@ -11,14 +10,6 @@ app = FastAPI(
 app.include_router(router=menu_router.router)
 app.include_router(router=submenu_router.router)
 app.include_router(router=dish_router.router)
-
-# TODO: удалить лишние куски кода (в комментариях)
-
-
-@app.on_event("shutdown")
-def shutdown_event():
-    """Clear cache before shutdown"""
-    redis_client.flushdb()
 
 
 def custom_openapi():

@@ -33,7 +33,7 @@ async def create_submenu(
         menu_id=menu_id,
     )
     if new_submenu:
-        # Cache.clear_cache(key)
+        await Cache.clear_cache(key)
         return new_submenu
     raise HTTPException(status_code=405, detail="Invalid input")
 
@@ -48,11 +48,11 @@ async def read_all_submenus(
     menu_id: int, db: AsyncSession = Depends(get_db)
 ) -> list[dict[str, int]]:
     key = f"/api/v1/menus/{menu_id}/submenus"
-    # cached_l = Cache.get_from_cache(key)
-    # if cached_l:
-    #     return cached_l
+    cached_l = await Cache.get_from_cache(key)
+    if cached_l:
+        return cached_l
     submenus_l = await read.get_submenus(db=db, menu_id=menu_id)
-    # Cache.set_to_cache(key, jsonable_encoder(submenus_l))
+    await Cache.set_to_cache(key, jsonable_encoder(submenus_l))
     return submenus_l
 
 
@@ -68,12 +68,12 @@ async def read_submenu(
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, int]:
     key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}"
-    # cached_submenu = Cache.get_from_cache(key)
-    # if cached_submenu:
-    #     return cached_submenu
+    cached_submenu = await Cache.get_from_cache(key)
+    if cached_submenu:
+        return cached_submenu
     submenu = await read.get_submenu_by_id(db=db, submenu_id=submenu_id)
     if submenu:
-        # Cache.set_to_cache(key, jsonable_encoder(submenu))
+        await Cache.set_to_cache(key, jsonable_encoder(submenu))
         return submenu
     raise HTTPException(status_code=404, detail="submenu not found")
 
@@ -95,9 +95,9 @@ async def update_submenu(
     if not upd_submenu:
         raise HTTPException(status_code=404, detail="submenu not found")
 
-    # upd_submenu.title = submenu.title
-    # upd_submenu.description = submenu.description
-    # Cache.set_to_cache(key, jsonable_encoder(upd_submenu))
+    upd_submenu.title = submenu.title
+    upd_submenu.description = submenu.description
+    await Cache.set_to_cache(key, jsonable_encoder(upd_submenu))
     await update.update_submenu(
         db=db,
         submenu_id=submenu_id,
@@ -125,6 +125,6 @@ async def delete_submenu(
         submenu_id=submenu_id,
     )
     if del_submenu:
-        # Cache.clear_cache(key)
+        await Cache.clear_cache(key)
         return {"status": True, "message": "The submenu has been deleted"}
     raise HTTPException(status_code=404, detail="submenu not found")
