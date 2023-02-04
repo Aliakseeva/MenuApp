@@ -1,9 +1,10 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from .custom_APIRouter import APIRouter
 from ..cache import Cache
 from ..crud import create, delete, read, update
 from ..database import get_db

@@ -1,9 +1,10 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from .custom_APIRouter import APIRouter
 from ..cache import Cache
 from ..crud import create, delete, read, update
 from ..database import get_db
@@ -21,6 +22,7 @@ router = APIRouter(tags=["Menu"], prefix="/api/v1/menus")
 async def create_menu(
     menu: m.MenuCreateUpdate, db: AsyncSession = Depends(get_db)
 ) -> dict[str, int]:
+    """dddkjdjdjd"""
     key = "/api/v1/menus"
     new_menu = await create.create_menu(db=db, menu=menu)
     if new_menu:

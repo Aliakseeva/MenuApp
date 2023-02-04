@@ -8,7 +8,7 @@ from MenuApp.src.database import async_session, engine, get_db
 from MenuApp.src.main import app
 from MenuApp.src.models import *
 
-URL = "/api/v1/menus/"
+URL = "/api/v1/menus"
 DATA = {"title": "Menu title", "description": "Menu description"}
 UPDATED_DATA = {
     "title": "Upd menu title",
@@ -34,8 +34,8 @@ async def db() -> AsyncGenerator:
     async with async_session() as db:
         yield db
 
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+    # async with engine.begin() as conn:
+    #     await conn.run_sync(Base.metadata.drop_all)
 
 
 @fixture(scope="session")
