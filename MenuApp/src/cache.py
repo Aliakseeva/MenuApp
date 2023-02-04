@@ -21,6 +21,6 @@ class Cache:
     @staticmethod
     def clear_cache(route: str) -> None:
         """Clear value with 'route' as a key in cache"""
-        keys = redis_client.keys(f'{route}*')
+        keys = redis_client.keys(f"{route}*")
         if keys:
             redis_client.delete(*keys)

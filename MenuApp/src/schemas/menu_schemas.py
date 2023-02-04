@@ -11,12 +11,12 @@ class Menu(BaseModel):
     class Config:
         orm_mode = True
         schema_extra = {
-            'example': {
-                'id': '0921',
-                'title': 'Breakfast',
-                'description': 'Breakfast menu description',
-                'submenus_count': 2,
-                'dishes_count': 9,
+            "example": {
+                "id": "0921",
+                "title": "Breakfast",
+                "description": "Breakfast menu description",
+                "submenus_count": 2,
+                "dishes_count": 9,
             },
         }
 
@@ -28,8 +28,8 @@ class MenuCreateUpdate(BaseModel):
     class Config:
         orm_mode = True
         schema_extra = {
-            'example': {
-                'title': 'Lunch menu',
-                'description': 'Lunch menu description',
+            "example": {
+                "title": "Lunch menu",
+                "description": "Lunch menu description",
             },
         }

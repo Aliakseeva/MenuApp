@@ -1,7 +1,4 @@
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from sqlalchemy import select
 
 from ..models import Dish, Menu, Submenu
 from ..schemas import dish_schemas as d
@@ -13,34 +10,31 @@ from .read import get_menu_by_id, get_submenu_by_id
 async def create_menu(db: AsyncSession, menu: m.MenuCreateUpdate):
     """Create new menu record in database.
 
-        Parameters:
-            db: AsyncSession object,
-            menu: Validation Schema,
+    Parameters:
+        db: AsyncSession object,
+        menu: Validation Schema,
 
-        Returns:
-            db_menu: The created menu record.
+    Returns:
+        db_menu: The created menu record.
     """
     db_menu = Menu(**menu.dict())
-    # db.add(db_menu)
-    # db.commit()
-    # db.refresh(db_menu)
     db.add(db_menu)
     await db.commit()
-    # await db.refresh(db_menu)
     return db_menu
 
 
-async def create_submenu(db: AsyncSession, submenu: sm.SubmenuCreateUpdate, menu_id: int):
-    # TODO: сделать транзакцию
+async def create_submenu(
+    db: AsyncSession, submenu: sm.SubmenuCreateUpdate, menu_id: int
+):
     """Create new submenu record in database.
 
-        Parameters:
-            db: AsyncSession object,
-            submenu: Validation Schema,
-            menu_id: Which menu ID the submenu belongs to.
+    Parameters:
+        db: AsyncSession object,
+        submenu: Validation Schema,
+        menu_id: Which menu ID the submenu belongs to.
 
-        Returns:
-            db_submenu: The created submenu record.
+    Returns:
+        db_submenu: The created submenu record.
     """
     db_submenu = Submenu(**submenu.dict())
     db_submenu.menu_id = menu_id
@@ -53,17 +47,19 @@ async def create_submenu(db: AsyncSession, submenu: sm.SubmenuCreateUpdate, menu
     return db_submenu
 
 
-async def create_dish(db: AsyncSession, dish: d.DishCreateUpdate, menu_id: int, submenu_id: int):
+async def create_dish(
+    db: AsyncSession, dish: d.DishCreateUpdate, menu_id: int, submenu_id: int
+):
     """Create new dish record in database.
 
-        Parameters:
-            db: AsyncSession object,
-            dish: Validation Schema,
-            menu_id: Which menu ID the dish belongs to.
-            submenu_id: Which submenu ID the dish belongs to.
+    Parameters:
+        db: AsyncSession object,
+        dish: Validation Schema,
+        menu_id: Which menu ID the dish belongs to.
+        submenu_id: Which submenu ID the dish belongs to.
 
-        Returns:
-            db_dish: The created dish record.
+    Returns:
+        db_dish: The created dish record.
     """
     db_dish = Dish(**dish.dict())
     db_dish.submenu_id = submenu_id
@@ -76,5 +72,4 @@ async def create_dish(db: AsyncSession, dish: d.DishCreateUpdate, menu_id: int, 
 
     db.add(db_dish)
     await db.commit()
-    # db.refresh(db_dish)
     return db_dish

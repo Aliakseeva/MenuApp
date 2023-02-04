@@ -10,11 +10,11 @@ class Dish(BaseModel):
     class Config:
         orm_mode = True
         schema_extra = {
-            'example': {
-                'id': '31416',
-                'title': 'Chop',
-                'description': 'Is a dish',
-                'price': '9.99',
+            "example": {
+                "id": "31416",
+                "title": "Chop",
+                "description": "Is a dish",
+                "price": "9.99",
             },
         }
 
@@ -27,9 +27,9 @@ class DishCreateUpdate(BaseModel):
     class Config:
         orm_mode = True
         schema_extra = {
-            'example': {
-                'title': 'Chop',
-                'description': 'Is a dish',
-                'price': '9.99',
+            "example": {
+                "title": "Chop",
+                "description": "Is a dish",
+                "price": "9.99",
             },
         }
