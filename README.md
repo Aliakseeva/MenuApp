@@ -13,6 +13,8 @@ See OpenAPI Specification: http://0.0.0.0:8000/
 📝 Alembic database migration tool
 🦄 Uvicorn ASGI web server
 🐳 Docker containers
+🥦 Celery-tasks
+🐰 RabbitMQ broker
 ✅ Pytest
 ```
 
@@ -60,6 +62,12 @@ DB_PASS=postgres
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_DB=0
+
+RABBITMQ_HOST=rabbit
+RABBITMQ_PORT=5672
+RABBITMQ_DEFAULT_USER=rabbit
+RABBITMQ_DEFAULT_PASS=rabbit
+RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS='-rabbit disk_free_limit 2147483648'
 ```
 
 ##### 3. Create virtual environment and activate it:
@@ -84,13 +92,12 @@ cd MenuApp/
 alembic upgrade head
 ```
 
-##### 6. Run redis-server and start the project:
+##### 6. Run redis, rabbit servers, and start the project:
 
 ```bash
 redis-server
+docker run -d -p 5672:5672 rabbit
 uvicorn src.main:app --reload
 ```
-
-Note! The database is cleared automatically with every app run.
 
 ##### 7. You are awesome! Enjoy! 😼
