@@ -7,7 +7,7 @@ metadata = MetaData()
 
 
 class Menu(Base):
-    __tablename__ = 'menus'
+    __tablename__ = "menus"
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
@@ -15,29 +15,33 @@ class Menu(Base):
     submenus_count = Column(Integer, default=0)
     dishes_count = Column(Integer, default=0)
 
-    submenus = relationship('Submenu', back_populates='menu')
+    submenus = relationship(
+        "Submenu", back_populates="menu", cascade="all, delete-orphan"
+    )
 
 
 class Submenu(Base):
-    __tablename__ = 'submenus'
+    __tablename__ = "submenus"
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
     description = Column(String)
-    menu_id = Column(Integer, ForeignKey('menus.id', ondelete='CASCADE'))
+    menu_id = Column(Integer, ForeignKey("menus.id", ondelete="CASCADE"))
     dishes_count = Column(Integer, default=0)
 
-    menu = relationship('Menu', back_populates='submenus')
-    dishes = relationship('Dish', back_populates='submenu')
+    menu = relationship("Menu", back_populates="submenus")
+    dishes = relationship(
+        "Dish", back_populates="submenu", cascade="all, delete-orphan"
+    )
 
 
 class Dish(Base):
-    __tablename__ = 'dishes'
+    __tablename__ = "dishes"
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
     description = Column(String)
-    price = Column(String, default='0.00')
-    submenu_id = Column(Integer, ForeignKey('submenus.id', ondelete='CASCADE'))
+    price = Column(String, default="0.00")
+    submenu_id = Column(Integer, ForeignKey("submenus.id", ondelete="CASCADE"))
 
-    submenu = relationship('Submenu', back_populates='dishes')
+    submenu = relationship("Submenu", back_populates="dishes")
