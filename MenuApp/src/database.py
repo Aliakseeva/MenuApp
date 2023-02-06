@@ -15,8 +15,10 @@ from .config import (
     REDIS_PORT,
 )
 
-LOCAL_REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
-redis_client = aioredis.from_url(url=LOCAL_REDIS_URL, db=REDIS_DB, decode_responses=True)
+CACHE_REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
+redis_client = aioredis.from_url(
+    url=CACHE_REDIS_URL, db=REDIS_DB, decode_responses=True
+)
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 

@@ -5,6 +5,8 @@ from fastapi.types import DecoratedCallable
 
 
 class APIRouter(FastAPIRouter):
+    """Fix temporary 307 redirect"""
+
     def api_route(
         self, path: str, *, include_in_schema: bool = True, **kwargs: Any
     ) -> Callable[[DecoratedCallable], DecoratedCallable]:

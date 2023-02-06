@@ -4,11 +4,12 @@ from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from MenuApp.src.cache import Cache
+from MenuApp.src.database import get_db
+from MenuApp.src.schemas import submenu_schemas as sm
+from MenuApp.src.services.crud import create, delete, read, update
+
 from .custom_APIRouter import APIRouter
-from ..cache import Cache
-from ..crud import create, delete, read, update
-from ..database import get_db
-from ..schemas import submenu_schemas as sm
 
 router = APIRouter(
     tags=["Submenu"],
@@ -45,9 +46,7 @@ async def create_submenu(
     summary="Get a submenus list",
     status_code=HTTPStatus.OK,
 )
-async def read_all_submenus(
-    menu_id: int, db: AsyncSession = Depends(get_db)
-) -> list[dict[str, int]]:
+async def read_all_submenus(menu_id: int, db: AsyncSession = Depends(get_db)):
     key = f"/api/v1/menus/{menu_id}/submenus"
     cached_l = await Cache.get_from_cache(key)
     if cached_l:
@@ -67,7 +66,7 @@ async def read_submenu(
     menu_id: int,
     submenu_id: int,
     db: AsyncSession = Depends(get_db),
-) -> dict[str, int]:
+):
     key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}"
     cached_submenu = await Cache.get_from_cache(key)
     if cached_submenu:

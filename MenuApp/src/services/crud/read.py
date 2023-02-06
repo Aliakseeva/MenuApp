@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..models import Dish, Menu, Submenu
+from MenuApp.src.models import Dish, Menu, Submenu
 
 
 async def get_menu_by_id(db: AsyncSession, menu_id: int):

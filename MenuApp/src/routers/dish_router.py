@@ -4,11 +4,11 @@ from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .custom_APIRouter import APIRouter
-from ..cache import Cache
-from ..crud import create, delete, read, update
-from ..database import get_db
-from ..schemas import dish_schemas as d
+from MenuApp.src.cache import Cache
+from MenuApp.src.database import get_db
+from MenuApp.src.routers.custom_APIRouter import APIRouter
+from MenuApp.src.schemas import dish_schemas as d
+from MenuApp.src.services.crud import create, delete, read, update
 
 router = APIRouter(
     tags=["Dish"],
@@ -51,7 +51,7 @@ async def get_all_dishes(
     menu_id: int,
     submenu_id: int,
     db: AsyncSession = Depends(get_db),
-) -> list[dict[str, int]]:
+):
     key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes"
     cached_l = await Cache.get_from_cache(key)
     if cached_l:
@@ -72,7 +72,7 @@ async def get_dish(
     submenu_id: int,
     dish_id: int,
     db: AsyncSession = Depends(get_db),
-) -> dict[str, int]:
+):
     key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}"
     cached_dish = await Cache.get_from_cache(key)
     if cached_dish:
@@ -100,7 +100,7 @@ async def update_dish(
     key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}"
     upd_dish = await read.get_dish_by_id(db=db, dish_id=dish_id)
     if not upd_dish:
-        raise HTTPException(status_code=404, detail='dish not found')
+        raise HTTPException(status_code=404, detail="dish not found")
     upd_dish.title = dish.title
     upd_dish.description = dish.description
     upd_dish.price = dish.price

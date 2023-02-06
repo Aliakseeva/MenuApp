@@ -4,11 +4,11 @@ from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .custom_APIRouter import APIRouter
-from ..cache import Cache
-from ..crud import create, delete, read, update
-from ..database import get_db
-from ..schemas import menu_schemas as m
+from MenuApp.src.cache import Cache
+from MenuApp.src.database import get_db
+from MenuApp.src.routers.custom_APIRouter import APIRouter
+from MenuApp.src.schemas import menu_schemas as m
+from MenuApp.src.services.crud import create, delete, read, update
 
 router = APIRouter(tags=["Menu"], prefix="/api/v1/menus")
 
@@ -22,7 +22,7 @@ router = APIRouter(tags=["Menu"], prefix="/api/v1/menus")
 async def create_menu(
     menu: m.MenuCreateUpdate, db: AsyncSession = Depends(get_db)
 ) -> dict[str, int]:
-    """dddkjdjdjd"""
+    """"""
     key = "/api/v1/menus"
     new_menu = await create.create_menu(db=db, menu=menu)
     if new_menu:
@@ -37,7 +37,7 @@ async def create_menu(
     summary="Get a menus list",
     status_code=HTTPStatus.OK,
 )
-async def get_all_menus(db: AsyncSession = Depends(get_db)) -> list[dict[str, int]]:
+async def get_all_menus(db: AsyncSession = Depends(get_db)):
     key = "/api/v1/menus"
     cached_l = await Cache.get_from_cache(router.prefix)
     if cached_l:
@@ -53,8 +53,8 @@ async def get_all_menus(db: AsyncSession = Depends(get_db)) -> list[dict[str, in
     summary="Get menu details",
     status_code=HTTPStatus.OK,
 )
-async def get_menu(menu_id: int, db: AsyncSession = Depends(get_db)) -> dict[str, int]:
-    key = f'/api/v1/menus/{menu_id}'
+async def get_menu(menu_id: int, db: AsyncSession = Depends(get_db)):
+    key = f"/api/v1/menus/{menu_id}"
     cached_menu = await Cache.get_from_cache(key)
     if cached_menu:
         return cached_menu

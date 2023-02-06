@@ -1,6 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .read import get_dish_by_id, get_menu_by_id, get_submenu_by_id
+from MenuApp.src.services.crud.read import (
+    get_dish_by_id,
+    get_menu_by_id,
+    get_submenu_by_id,
+)
 
 
 async def update_menu(db: AsyncSession, menu_id: int, new_title: str, new_descr: str):
