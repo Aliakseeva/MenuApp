@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, MetaData, String
 from sqlalchemy.orm import relationship
 
-from .database import Base
+from MenuApp.src.db.database import Base
 
 metadata = MetaData()
 

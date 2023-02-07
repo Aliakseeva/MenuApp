@@ -6,8 +6,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from MenuApp.src.models import Menu, Submenu
-from MenuApp.src.services.tasks.cel import celery
+from MenuApp.src.db.models import Menu, Submenu
+from MenuApp.src.core.cel import celery
 
 
 async def get_report_data(db: AsyncSession) -> list:

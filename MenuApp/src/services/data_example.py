@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from MenuApp.src.services.crud import create
+from MenuApp.src.services.db_service import create
 from MenuApp.src.services.data import (
     DISH_EXAMPLE_1_1,
     DISH_EXAMPLE_1_2,

@@ -4,9 +4,9 @@ from typing import AsyncGenerator
 from httpx import AsyncClient
 from pytest_asyncio import fixture
 
-from MenuApp.src.database import async_session, engine, get_db
+from MenuApp.src.db import async_session, engine, get_db
 from MenuApp.src.main import app
-from MenuApp.src.models import *
+from MenuApp.src.db.models import *
 
 URL = "/api/v1/menus"
 DATA = {"title": "Menu title", "description": "Menu description"}

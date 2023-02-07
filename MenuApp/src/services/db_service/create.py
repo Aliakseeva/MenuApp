@@ -1,14 +1,12 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from MenuApp.src.models import Dish, Menu, Submenu
-from MenuApp.src.schemas import dish_schemas as d
-from MenuApp.src.schemas import menu_schemas as m
-from MenuApp.src.schemas import submenu_schemas as sm
-from MenuApp.src.services.crud.read import get_menu_by_id, get_submenu_by_id
+from MenuApp.src.db.models import Dish, Menu, Submenu
+from MenuApp.src.db.schemas import Menu, MenuCreateUpdate, SubmenuCreateUpdate, DishCreateUpdate
+from MenuApp.src.services.db_service.read import get_menu_by_id, get_submenu_by_id
 
 
 async def create_menu(
-    db: AsyncSession, menu: m.MenuCreateUpdate = None, example: dict = None
+    db: AsyncSession, menu: MenuCreateUpdate = None, example: dict = None
 ):
     """Create new menu record in database.
 
@@ -32,7 +30,7 @@ async def create_menu(
 async def create_submenu(
     db: AsyncSession,
     menu_id: int,
-    submenu: sm.SubmenuCreateUpdate = None,
+    submenu: SubmenuCreateUpdate = None,
     example: dict = None,
 ):
     """Create new submenu record in database.
@@ -64,7 +62,7 @@ async def create_dish(
     db: AsyncSession,
     menu_id: int,
     submenu_id: int,
-    dish: d.DishCreateUpdate = None,
+    dish: DishCreateUpdate = None,
     example: dict = None,
 ):
     """Create new dish record in database.

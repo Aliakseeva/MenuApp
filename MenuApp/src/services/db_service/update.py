@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from MenuApp.src.services.crud.read import (
+from MenuApp.src.services.db_service.read import (
     get_dish_by_id,
     get_menu_by_id,
     get_submenu_by_id,

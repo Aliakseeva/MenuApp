@@ -1,7 +1,7 @@
 ﻿from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from .routers import dish_router, menu_router, submenu_router, task_router
+from .api.v1.endpoints import submenu_router, dish_router, menu_router, task_router
 
 app = FastAPI(
     docs_url="/",
@@ -9,9 +9,9 @@ app = FastAPI(
 )
 
 app.include_router(router=menu_router.router)
-app.include_router(router=submenu_router.router)
-app.include_router(router=dish_router.router)
-app.include_router(router=task_router.router)
+# app.include_router(router=submenu_router.router)
+# app.include_router(router=dish_router.router)
+# app.include_router(router=task_router.router)
 
 
 def custom_openapi():
