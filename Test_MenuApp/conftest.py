@@ -1,5 +1,5 @@
 import asyncio
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from httpx import AsyncClient
 from pytest_asyncio import fixture

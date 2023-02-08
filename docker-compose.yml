@@ -10,11 +10,10 @@ services:
     env_file:
       MenuApp/.env
     volumes:
-      - app_data:/app/files
+      - app_data:/app/MenuApp/src/services/tasks
     command:
       bash -c "cd MenuApp && alembic upgrade head && cd .. &&
-      uvicorn MenuApp.src.main:app --host 0.0.0.0 --port 8000 &&
-      celery -A MenuApp.src.services.tasks.cel:celery worker --loglevel=INFO"
+      uvicorn MenuApp.src.main:app --host 0.0.0.0 --port 8000"
     ports:
       - 8000:8000
 #    restart: on-failure
@@ -65,7 +64,7 @@ services:
     env_file: MenuApp/.env
     hostname: rabbitmq
     volumes:
-      - app_data:/app/files
+      - app_data:/app/MenuApp/src/services/tasks
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
@@ -76,6 +75,24 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  celery:
+    container_name: celery
+    build: .
+    volumes:
+      - app_data:/app/MenuApp/src/services/tasks
+    env_file:
+      - MenuApp/.env
+    networks:
+      - app_db_network
+    command: "celery -A MenuApp.src.services.tasks.cel:celery worker --loglevel=INFO"
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbit:
+        condition: service_healthy
+      app:
+        condition: service_started
 
 networks:
   app_db_network:

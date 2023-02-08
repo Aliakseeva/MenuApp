@@ -26,9 +26,7 @@ async def update_menu(db: AsyncSession, menu_id: int, new_title: str, new_descr:
     return upd_menu
 
 
-async def update_submenu(
-    db: AsyncSession, submenu_id: int, new_title: str, new_descr: str
-):
+async def update_submenu(db: AsyncSession, submenu_id: int, new_title: str, new_descr: str):
     """Update the submenu record in database.
 
     Parameters:

@@ -8,7 +8,7 @@ from MenuApp.src.services.crud.read import get_menu_by_id, get_submenu_by_id
 
 
 async def create_menu(
-    db: AsyncSession, menu: m.MenuCreateUpdate = None, example: dict = None
+    db: AsyncSession, menu: m.MenuCreateUpdate | None = None, example: dict | None = None
 ):
     """Create new menu record in database.
 
@@ -22,7 +22,7 @@ async def create_menu(
     """
     if example:
         db_menu = Menu(**example)
-    else:
+    elif menu:
         db_menu = Menu(**menu.dict())
     db.add(db_menu)
     await db.commit()
@@ -32,8 +32,8 @@ async def create_menu(
 async def create_submenu(
     db: AsyncSession,
     menu_id: int,
-    submenu: sm.SubmenuCreateUpdate = None,
-    example: dict = None,
+    submenu: sm.SubmenuCreateUpdate | None = None,
+    example: dict | None = None,
 ):
     """Create new submenu record in database.
 
@@ -48,7 +48,7 @@ async def create_submenu(
     """
     if example:
         db_submenu = Submenu(**example)
-    else:
+    elif submenu:
         db_submenu = Submenu(**submenu.dict())
     db_submenu.menu_id = menu_id
 
@@ -64,8 +64,8 @@ async def create_dish(
     db: AsyncSession,
     menu_id: int,
     submenu_id: int,
-    dish: d.DishCreateUpdate = None,
-    example: dict = None,
+    dish: d.DishCreateUpdate | None = None,
+    example: dict | None = None,
 ):
     """Create new dish record in database.
 
@@ -81,7 +81,7 @@ async def create_dish(
     """
     if example:
         db_dish = Dish(**example)
-    else:
+    elif dish:
         db_dish = Dish(**dish.dict())
     db_dish.submenu_id = submenu_id
 

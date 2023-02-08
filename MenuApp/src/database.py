@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 import aioredis
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -16,9 +16,7 @@ from .config import (
 )
 
 CACHE_REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
-redis_client = aioredis.from_url(
-    url=CACHE_REDIS_URL, db=REDIS_DB, decode_responses=True
-)
+redis_client = aioredis.from_url(url=CACHE_REDIS_URL, db=REDIS_DB, decode_responses=True)
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 

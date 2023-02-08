@@ -34,7 +34,8 @@ def formate_data(report_data) -> dict:
         template: a dict-template to write in xlsx-file.
     """
     generated_date = datetime.now().strftime("%d %B %Y at %H:%M")
-    description = f"Report generated {generated_date}"
+    timezone = datetime.now().astimezone()
+    description = f"Report generated {generated_date} ({timezone.tzinfo.__str__()})"
     template = {
         "A": [description],
         "B": [""],
@@ -85,4 +86,4 @@ def to_exel(data):
         None.
     """
     df = pd.DataFrame(data)
-    df.to_excel("report.xlsx")
+    df.to_excel("./MenuApp/src/services/tasks/report.xlsx")

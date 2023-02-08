@@ -49,9 +49,7 @@ async def delete_submenu(db: AsyncSession, menu_id: int, submenu_id: int) -> boo
     return False
 
 
-async def delete_dish(
-    db: AsyncSession, dish_id: int, menu_id: int, submenu_id: int
-) -> bool:
+async def delete_dish(db: AsyncSession, dish_id: int, menu_id: int, submenu_id: int) -> bool:
     """Delete the dish record in database.
 
     Parameters:

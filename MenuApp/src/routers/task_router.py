@@ -12,14 +12,14 @@ from MenuApp.src.services.tasks.report import formate_data, get_report_data, to_
 router = APIRouter(tags=["Additional"], prefix="/api/v1/report")
 
 
-@router.post(
-    "/xlsx", summary="Generate report xlsx-file", status_code=HTTPStatus.ACCEPTED
-)
+@router.post("/xlsx", summary="Generate report xlsx-file", status_code=HTTPStatus.ACCEPTED)
 async def gen_report(db: AsyncSession = Depends(get_db)):
+    """Start a task to generate report.
+    You can download it later with get-request."""
     data = await get_report_data(db)
     formatted_data = formate_data(data)
     task_id = to_exel.delay(formatted_data)
-    return {"task ID": task_id.__str__()}
+    return {"task ID": task_id.__str__(), "status": HTTPStatus.ACCEPTED}
 
 
 @router.get(
@@ -28,8 +28,11 @@ async def gen_report(db: AsyncSession = Depends(get_db)):
     status_code=HTTPStatus.OK,
 )
 async def get_report():
+    """Get a link to download full report, generated before."""
     return FileResponse(
-        "report.xlsx", media_type="application/octet-stream", filename="report.xlsx"
+        "./MenuApp/src/services/tasks/report.xlsx",
+        media_type="application/excel",
+        filename="report.xlsx",
     )
 
 
@@ -39,5 +42,6 @@ async def get_report():
     status_code=HTTPStatus.CREATED,
 )
 async def generate_example(db: AsyncSession = Depends(get_db)):
+    """Fill database with example data."""
     await data_example.create_example(db=db)
-    return "Done!"
+    return {"status": HTTPStatus.OK}
