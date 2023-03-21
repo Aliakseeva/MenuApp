@@ -1,5 +1,6 @@
 from http import HTTPStatus
-from MenuApp.src.dependencies import get_task_service, get_fill_test_data_service
+from MenuApp.src.dependencies import get_task_service, get_fill_test_data_service, get_report_service
+from MenuApp.src.services.tasks.report_service import ReportService
 from MenuApp.src.services.tasks.task_service import TaskService
 from MenuApp.src.services.test_data_filling_service import TestDataService
 
@@ -43,12 +44,14 @@ async def generate_report(task_service: TaskService = Depends(get_task_service))
     summary="Get link to download report xlsx-file",
     status_code=HTTPStatus.OK,
 )
-async def get_report(task_id: str):
+async def get_report(task_id: str, report_service: ReportService  = Depends(get_report_service)):
     """Get a link to download full report, generated before."""
     report_path = f'./reports/{task_id}.xlsx'
-
-    return FileResponse(
-        report_path,
-        media_type="application/excel",
-        filename=f'{task_id}.xlsx'
-    )
+    if report_service.is_exist(report_path):
+        return FileResponse(
+            report_path,
+            media_type="application/excel",
+            filename=f'{task_id}.xlsx'
+        )
+    else:
+        return {'error': 'File not found'}

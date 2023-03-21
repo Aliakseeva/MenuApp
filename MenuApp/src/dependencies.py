@@ -56,9 +56,9 @@ async def get_fill_test_data_service(db: AsyncSession = Depends(get_db), cache: 
     return TestDataService(db, cache)
 
 
-async def _get_report_service(db: AsyncSession = Depends(get_db)):
+async def get_report_service(db: AsyncSession = Depends(get_db)):
     return ReportService(db=db)
 
 
-async def get_task_service(report: ReportService = Depends(_get_report_service)):
+async def get_task_service(report: ReportService = Depends(get_report_service)):
     return TaskService(report=report)

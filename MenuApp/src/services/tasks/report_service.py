@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 
 from fastapi.encoders import jsonable_encoder
@@ -71,3 +72,6 @@ class ReportService:
 
         return template
 
+    @staticmethod
+    def is_exist(file_path):
+        return os.path.exists(file_path)
