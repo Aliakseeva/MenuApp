@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, select, func
-from sqlalchemy.orm import relationship, MapperProperty, column_property
+from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, func, select
+from sqlalchemy.orm import MapperProperty, column_property, relationship
 
 from .database import Base
 

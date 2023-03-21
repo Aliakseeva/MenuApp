@@ -7,7 +7,6 @@ from MenuApp.src.routers.custom_APIRouter import APIRouter
 from MenuApp.src.schemas import dish_schemas
 from MenuApp.src.services.dish_service import DishService
 
-
 router = APIRouter(
     tags=["Dish"],
     prefix="/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes",

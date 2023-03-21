@@ -1,12 +1,11 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .database import get_db
-from .database import get_redis
+from .database import get_db, get_redis
+from .services.cache_service import CacheService
 from .services.crud.dish_crud import DishCrud
 from .services.crud.menu_crud import MenuCrud
 from .services.crud.submenu_crud import SubmenuCrud
-from .services.cache_service import CacheService
 from .services.dish_service import DishService
 from .services.menu_service import MenuService
 from .services.submenu_service import SubmenuService
@@ -52,7 +51,9 @@ async def get_dish_service(
     return DishService(crud, cache=cache)
 
 
-async def get_fill_test_data_service(db: AsyncSession = Depends(get_db), cache: CacheService = Depends(get_cache)):
+async def get_fill_test_data_service(
+    db: AsyncSession = Depends(get_db), cache: CacheService = Depends(get_cache)
+):
     return TestDataService(db, cache)
 
 

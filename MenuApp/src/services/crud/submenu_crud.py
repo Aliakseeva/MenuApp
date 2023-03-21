@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from MenuApp.src.models import Submenu
 from MenuApp.src.schemas.submenu_schemas import SubmenuCreateUpdate

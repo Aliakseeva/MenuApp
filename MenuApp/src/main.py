@@ -1,8 +1,9 @@
 ﻿from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
-from MenuApp.info import title, description, version
-from .routers import menu_router, submenu_router, dish_router, task_router
 
+from MenuApp.info import description, title, version
+
+from .routers import dish_router, menu_router, submenu_router, task_router
 
 app = FastAPI(
     docs_url="/",

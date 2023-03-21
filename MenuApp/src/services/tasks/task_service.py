@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from http import HTTPStatus
 
-from MenuApp.src.services.tasks.report_service import ReportService
 import pandas as pd
 
 from MenuApp.src.services.tasks.cel import celery
+from MenuApp.src.services.tasks.report_service import ReportService
 
 
 @celery.task

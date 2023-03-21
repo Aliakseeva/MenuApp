@@ -8,7 +8,6 @@ from MenuApp.src.services.submenu_service import SubmenuService
 
 from .custom_APIRouter import APIRouter
 
-
 router = APIRouter(
     tags=["Submenu"],
     prefix="/api/v1/menus/{menu_id}/submenus",
@@ -21,7 +20,9 @@ router = APIRouter(
     summary="Get a submenus list",
     status_code=HTTPStatus.OK,
 )
-async def get_all_submenus(menu_id: int, submenu_service: SubmenuService = Depends(get_submenu_service)):
+async def get_all_submenus(
+    menu_id: int, submenu_service: SubmenuService = Depends(get_submenu_service)
+):
     return await submenu_service.get_list(menu_id=menu_id)
 
 

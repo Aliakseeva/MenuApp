@@ -1,12 +1,11 @@
 from http import HTTPStatus
 
 from fastapi import Depends
-from MenuApp.src.routers.custom_APIRouter import APIRouter
 
 from MenuApp.src.dependencies import get_menu_service
+from MenuApp.src.routers.custom_APIRouter import APIRouter
 from MenuApp.src.schemas import menu_schemas
 from MenuApp.src.services.menu_service import MenuService
-
 
 router = APIRouter(tags=["Menu"], prefix="/api/v1/menus")
 

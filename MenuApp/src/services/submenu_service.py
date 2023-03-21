@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from fastapi import HTTPException
 
-from .crud.submenu_crud import SubmenuCrud
 from ..schemas.submenu_schemas import SubmenuCreateUpdate
 from .cache_service import CacheService
+from .crud.submenu_crud import SubmenuCrud
 
 
 @dataclass
@@ -13,20 +13,20 @@ class SubmenuService:
     cache: CacheService
 
     async def get_list(self, menu_id: int):
-        cached_l = await self.cache.get('submenus_list')
+        cached_l = await self.cache.get("submenus_list")
         if cached_l:
             return cached_l
         submenus_l = await self.crud.get_list(menu_id=menu_id)
-        await self.cache.set('submenus_list', submenus_l)
+        await self.cache.set("submenus_list", submenus_l)
         return submenus_l
 
     async def get_one(self, submenu_id: int):
-        cached_submenu = await self.cache.get(f'submenu_{submenu_id}')
+        cached_submenu = await self.cache.get(f"submenu_{submenu_id}")
         if cached_submenu:
             return cached_submenu
         submenu = await self.crud.get_by_id(submenu_id)
         if submenu:
-            await self.cache.set(f'submenu_{submenu_id}', submenu)
+            await self.cache.set(f"submenu_{submenu_id}", submenu)
             return submenu
         raise HTTPException(status_code=404, detail="submenu not found")
 

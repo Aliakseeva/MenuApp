@@ -1,6 +1,8 @@
 import json
+from collections.abc import AsyncGenerator
 from dataclasses import dataclass
-from typing import Any, AsyncGenerator
+from typing import Any
+
 from fastapi.encoders import jsonable_encoder
 
 
