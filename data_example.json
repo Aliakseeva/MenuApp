@@ -1,0 +1,64 @@
+{
+    "menus": {
+        "1": {
+            "title": "Hearty Harvest",
+            "description": "Rustic, wholesome, seasonal ingredients, hearty meals."
+        },
+        "2": {
+            "title": "Coastal Catch",
+            "description": "Fresh seafood, coastal-inspired cuisine, light and flavorful."
+        }
+    },
+    "submenus": {
+        "1": {
+            "title": "Savory Sizzles",
+            "description": "Sizzling plates, bold flavors, international dishes.",
+            "menu_id": 1
+        },
+        "2": {
+            "title": "Sizzling Sirloins",
+            "description": "Juicy steaks, classic sides, elegant dining experience.",
+            "menu_id": 1
+        },
+        "3": {
+            "title": "Saucy Selections",
+            "description": "Bold sauces, fusion cuisine, international flavors.",
+            "menu_id": 2
+        },
+        "4": {
+            "id": 4,
+            "title": "Flavorful Fusion",
+            "description": "Unique blends of flavors, innovative dishes, cultural diversity.",
+            "menu_id": 2
+        }
+    },
+    "dishes": {
+        "1": {
+            "title": "Spice & Sizzle",
+            "description": "Spicy cuisine, sizzling plates, bold flavors.",
+            "price": "54.00",
+            "submenu_id": 1
+        },
+        "2": {
+            "id": 2,
+            "title": "Comfort Kitchen",
+            "description": "Home-style cooking, comfort food, classic dishes.",
+            "price": "45.90",
+            "submenu_id": 1
+        },
+        "3": {
+            "id": 3,
+            "title": "Gourmet Get",
+            "description": "Fine dining, elevated cuisine, culinary adventure.",
+            "price": "98.00",
+            "submenu_id": 3
+        },
+        "4": {
+            "id": 4,
+            "title": "Tasty Treat",
+            "description": " Desserts, sweet delights, indulgent treats.",
+            "price": "50.00",
+            "submenu_id": 4
+        }
+    }
+}

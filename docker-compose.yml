@@ -10,13 +10,13 @@ services:
     env_file:
       MenuApp/.env
     volumes:
-      - app_data:/app/MenuApp/src/services/tasks
+      - app_data:/app/reports
     command:
       bash -c "cd MenuApp && alembic upgrade head && cd .. &&
       uvicorn MenuApp.src.main:app --host 0.0.0.0 --port 8000"
     ports:
-      - 8000:8000
-#    restart: on-failure
+      - "8000:8000"
+    restart: on-failure
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,7 +64,7 @@ services:
     env_file: MenuApp/.env
     hostname: rabbitmq
     volumes:
-      - app_data:/app/MenuApp/src/services/tasks
+      - app_data:/app/reports
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
@@ -80,7 +80,7 @@ services:
     container_name: celery
     build: .
     volumes:
-      - app_data:/app/MenuApp/src/services/tasks
+      - app_data:/app/reports
     env_file:
       - MenuApp/.env
     networks:
@@ -100,4 +100,3 @@ networks:
 
 volumes:
   app_data:
-  postgres_data:

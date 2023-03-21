@@ -1,14 +1,12 @@
 from http import HTTPStatus
 
-from fastapi import Depends, HTTPException
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Depends
 
-from MenuApp.src.cache import Cache
-from MenuApp.src.database import get_db
+from MenuApp.src.dependencies import get_dish_service
 from MenuApp.src.routers.custom_APIRouter import APIRouter
-from MenuApp.src.schemas import dish_schemas as d
-from MenuApp.src.services.crud import create, delete, read, update
+from MenuApp.src.schemas import dish_schemas
+from MenuApp.src.services.dish_service import DishService
+
 
 router = APIRouter(
     tags=["Dish"],
@@ -18,101 +16,57 @@ router = APIRouter(
 
 @router.post(
     "/",
-    response_model=d.Dish,
+    response_model=dish_schemas.Dish,
     summary="Create a new dish",
     status_code=HTTPStatus.CREATED,
 )
 async def create_dish(
-    menu_id: int,
     submenu_id: int,
-    dish: d.DishCreateUpdate,
-    db: AsyncSession = Depends(get_db),
+    dish: dish_schemas.DishCreateUpdate,
+    dish_service: DishService = Depends(get_dish_service),
 ) -> dict[str, int]:
-    key = f"/api/v1/menus/{menu_id}"
-    new_dish = await create.create_dish(
-        db=db,
-        dish=dish,
-        menu_id=menu_id,
-        submenu_id=submenu_id,
-    )
-    if new_dish:
-        await Cache.clear_cache(key)
-        return new_dish
-    raise HTTPException(status_code=405, detail="Invalid input")
+    return await dish_service.create(submenu_id=submenu_id, dish=dish)
 
 
 @router.get(
     "/",
-    response_model=list[d.Dish],
+    response_model=list[dish_schemas.Dish],
     summary="Get a dishes list",
     status_code=HTTPStatus.OK,
 )
 async def get_all_dishes(
-    menu_id: int,
     submenu_id: int,
-    db: AsyncSession = Depends(get_db),
+    dish_service: DishService = Depends(get_dish_service),
 ):
-    key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes"
-    cached_l = await Cache.get_from_cache(key)
-    if cached_l:
-        return cached_l
-    dishes_l = await read.get_dishes(db=db, submenu_id=submenu_id)
-    await Cache.set_to_cache(key, jsonable_encoder(dishes_l))
-    return dishes_l
+    return await dish_service.get_list(submenu_id=submenu_id)
 
 
 @router.get(
     "/{dish_id}",
-    response_model=d.Dish,
+    response_model=dish_schemas.Dish,
     summary="Get dish details",
     status_code=HTTPStatus.OK,
 )
 async def get_dish(
-    menu_id: int,
     submenu_id: int,
     dish_id: int,
-    db: AsyncSession = Depends(get_db),
+    dish_service: DishService = Depends(get_dish_service),
 ):
-    key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}"
-    cached_dish = await Cache.get_from_cache(key)
-    if cached_dish:
-        return cached_dish
-    dish = await read.get_dish_by_id(db=db, dish_id=dish_id)
-    if dish:
-        await Cache.set_to_cache(key, jsonable_encoder(dish))
-        return dish
-    raise HTTPException(status_code=404, detail="dish not found")
+    return await dish_service.get_one(dish_id=dish_id)
 
 
 @router.patch(
     "/{dish_id}",
-    response_model=d.Dish,
+    response_model=dish_schemas.Dish,
     summary="Update the dish",
     status_code=HTTPStatus.OK,
 )
 async def update_dish(
-    menu_id: int,
-    submenu_id: int,
     dish_id: int,
-    dish: d.DishCreateUpdate,
-    db: AsyncSession = Depends(get_db),
+    dish: dish_schemas.DishCreateUpdate,
+    dish_service: DishService = Depends(get_dish_service),
 ) -> dict[str, int]:
-    key = f"/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}"
-    upd_dish = await read.get_dish_by_id(db=db, dish_id=dish_id)
-    if not upd_dish:
-        raise HTTPException(status_code=404, detail="dish not found")
-    upd_dish.title = dish.title
-    upd_dish.description = dish.description
-    upd_dish.price = dish.price
-    await Cache.set_to_cache(key, jsonable_encoder(upd_dish))
-    await update.update_dish(
-        db=db,
-        dish_id=dish_id,
-        new_title=dish.title,
-        new_descr=dish.description,
-        new_price=dish.price,
-    )
-    return upd_dish
+    return await dish_service.update(dish_id=dish_id, dish=dish)
 
 
 @router.delete(
@@ -122,19 +76,7 @@ async def update_dish(
     status_code=HTTPStatus.OK,
 )
 async def delete_dish(
-    menu_id: int,
-    submenu_id: int,
     dish_id: int,
-    db: AsyncSession = Depends(get_db),
+    dish_service: DishService = Depends(get_dish_service),
 ) -> dict:
-    key = f"/api/v1/menus/{menu_id}"
-    del_dish = await delete.delete_dish(
-        db=db,
-        dish_id=dish_id,
-        menu_id=menu_id,
-        submenu_id=submenu_id,
-    )
-    if del_dish:
-        await Cache.clear_cache(key)
-        return {"status": True, "message": "The dish has been deleted"}
-    raise HTTPException(status_code=404, detail="dish not found")
+    return await dish_service.delete(dish_id=dish_id)
